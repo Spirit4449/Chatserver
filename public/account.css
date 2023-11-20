@@ -1,0 +1,147 @@
+body {
+  font-family: 'Work Sans', sans-serif;
+  color: #b5bac1;
+  /* background-image: linear-gradient(#7DB9D8, #1E9FE3, #5865f2); */
+  background-image: url("/images/chatbackground.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.container {
+  background-color: #313338;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  animation: floatDown .7s cubic-bezier(0.4, 1.5, 0.2, 1) 0s forwards;
+  transition: height .5s ease;
+}
+
+
+@keyframes floatDown {
+  0% {
+    top: -100px;
+    /* Start position above the viewport */
+    opacity: 0;
+    width: 380px;
+  }
+
+  100% {
+    top: 0;
+    opacity: 1;
+    width: 350px;
+  }
+}
+
+.form-group {
+  text-align: left;
+  margin: 10px 0;
+  transition: transform 0.2s linear, opacity 0.2s linear; /* Add transition properties */
+}
+
+.form-group.animate-out {
+  transform: translateX(-50%);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.verification-group {
+  transition: transform 0.2s linear, opacity 0.2s linear;
+}
+
+.verification-group.animate-out {
+  transform: translateX(200px);
+  opacity: 0;
+  pointer-events: none;
+}
+
+
+
+h1 {
+  margin-top: 0;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 600;
+  color: white;
+}
+
+label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+input{
+  width: 100%;
+  padding: 10px 7px;
+  border-radius: 3px;
+  margin-top: 5px;
+  border: none;
+  color: white;
+  background-color: #1e1f22;
+  font-family: 'Work Sans', sans-serif;
+  box-sizing: border-box;
+  cursor: text;
+}
+
+input[type='text']:focus,
+input[type='password']:focus,
+input[type='number']:focus {
+  outline: 2px solid #5865f2;
+}
+
+
+button {
+  width: 100%;
+  padding: 10px;
+  background-color: #5865f2;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  transition: background-color 0.1s;
+  font-family: 'Nunito', sans-serif;
+  font-size: 12pt;
+}
+
+button:hover {
+  background-color: #4752c4;
+}
+button:focus {
+  outline: 2px solid #6570F1;
+  outline-offset: 3px;
+}
+
+a {
+  text-decoration: none;
+  color: #00a8fc;
+  font-size: 10pt;
+  cursor: pointer;
+}
+
+
+label {
+  display: inline;
+}
+
+.error {
+  display: inline;
+  color: #fa777c;
+  /* font-style: italic; */
+  font-size: 10pt;
+}
+
+
+span {
+  user-select: none;
+}
