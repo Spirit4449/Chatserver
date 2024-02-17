@@ -8,7 +8,7 @@ const chatContainer = document.getElementById("chat-container");
 
 
 fetch("/profile")
-  .then((response) => {
+  .then((response) => { 
     if (response.ok) {
       return response.json();
     } else {
