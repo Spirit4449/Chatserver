@@ -1,4 +1,4 @@
-import { key mc } from "../globals";
+import { key } from "../globals";
 import { formatChatDate, appendMessage, appendRichMessage, closeSetup } from "./script.js"
 
 var chatDisplay = document.getElementById("chat-display");
