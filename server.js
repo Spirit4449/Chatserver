@@ -29,6 +29,11 @@ const webpackHotMiddleware = require("webpack-hot-middleware");
 const config = require("./webpack.config.js");
 const compiler = webpack(config);
 
+// Mail
+const sgMail = require('@sendgrid/mail')
+const fs = require('fs');
+const htmlTemplate = fs.readFileSync('dist/Email/verification.html', 'utf8');
+
 app.use(
   webpackDevMiddleware(compiler, {
     publicPath: '/Bundles',
@@ -132,6 +137,21 @@ async function executeQuery(query, values) {
     connForUpdate.release();
   }
 })();
+
+
+sgMail.setApiKey(process.env.SENDGRID_API_KEY)
+// Nodemailer
+// const transporter = nodemailer.createTransport({
+//   service: 'smtp-relay.brevo.com',
+//   port: 587,
+//   secure: false,
+//   auth: {
+//     user: 'nischaydas510@gmail.com',
+//     pass: 'Akshardhammail'
+//   }
+// });
+
+
 
 // Create rate limit middleware for specific routes
 const roomCreationLimiter = rateLimit(rateLimitOptions);
@@ -342,6 +362,10 @@ app.post("/register-user", async (req, res) => {
     CryptoJS.enc.Utf8
   );
 
+  if (email.length > 255 || username.length > 20 || password.length > 255) {
+    return res.status(500).json({ message: 'One or more fields has too many characters' })
+  }
+
   try {
     // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -403,6 +427,10 @@ app.post("/login-user", async (req, res) => {
   const password = CryptoJS.AES.decrypt(encryptedPassword, key).toString(
     CryptoJS.enc.Utf8
   );
+
+  if (email.length > 255 || password.length > 255) {
+    return res.status(500).json({ message: 'One or more fields has too many characters' })
+  }
 
   try {
     // Select user data from the database with a prepared statement
@@ -474,27 +502,29 @@ app.get("/profile", (req, res) => {
   res.json(profileData);
 });
 
-app.post("/send-code", (req, res) => {
-  const userEmail = req.body.email; // Get the user's email address
-  const verificationCode = generateVerificationCode(); // Implement a function to generate a verification code
+app.post('/send-code', async (req, res) => {
+  const to = req.body.email;
+  const code = generateVerificationCode()
 
-  const mailOptions = {
-    from: "nischaydas510@gmail.com", // Replace with your sender email
-    to: userEmail, // Recipient's email address
-    subject: "Verification Code",
-    text: `Your verification code is: ${verificationCode}`,
-  };
+  const htmlContent = htmlTemplate.replace('${code}', code);
 
-  transporter.sendMail(mailOptions, (error, info) => {
-    if (error) {
-      console.error(error);
-      res.status(500).json({ message: "Failed to send verification code" });
-    } else {
-      console.log("Email sent: " + info.response);
-      res.status(204).end();
-    }
-  });
+  const msg = {
+    to: to, // Change to your recipient
+    from: 'noreply@classchats.net', // Change to your verified sender
+    subject: 'Verification code for Class Chats',
+    html: htmlContent,
+  }
+  sgMail
+    .send(msg)
+    .then(() => {
+      console.log('Email sent')
+      res.status(200).json({ message: 'Email sent successfully', code });
+    })
+    .catch((error) => {
+      res.status(500).json({ error: 'Failed to send email' });
+    })
 });
+
 
 io.on("connection", (socket) => {
   socket.on("new-user", (name) => {

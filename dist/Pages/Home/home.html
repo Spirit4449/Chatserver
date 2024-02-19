@@ -58,7 +58,7 @@
                             <span id="icon" class="material-symbols-rounded">done_all</span>
                         </div>
                     </div>
-                    <div class="chats" id="chat-container">
+                    <div class="chats custom-scrollbar" id="chat-container">
                     </div>
                 </div>
                 <div class="chat-display" id="chat-display">
@@ -74,11 +74,11 @@
                         </div>
                         <div class="input" id="message-input-container">
                             <span class="material-symbols-rounded" id="attatchment">attach_file</span>
-                            <textarea type="text" class="message-input custom-scrollbar" id="message-input" placeholder="" autocomplete="off" autofocus></textarea>
+                            <textarea type="text" class="message-input custom-scrollbar" id="message-input" placeholder="" autocomplete="off" maxlength="4000" autofocus></textarea>
                             <span class="material-symbols-rounded" id="attatchment">sentiment_satisfied</span>
                             <span class="material-symbols-rounded" id="attatchment">gif_box</span>
                             <span class="material-symbols-rounded" id="attatchment">code_blocks</span>
-                            <img src="/assets/send.svg" id="submit" onclick="send()" width="20xp" height="20px"></img>
+                            <img src="/assets/send.svg" id="send" width="20xp" height="20px"></img>
                         </div>
                     </div>
                 </div>
@@ -86,6 +86,8 @@
                     <img id="no-chat-selected-img" src="/assets/nochatselected.png" alt="No chat">
                     <p id='no-chat-selected-text'>Messages will show up here...</p>
                 </div>
+                <p id="no-messages">No messages here yet. Be the first to send one!</p>
+                <img src="/assets/loading.svg" id='loading' alt="loading">
             </div>
         </div>
     </div>
@@ -143,7 +145,7 @@
         <label for="image" class="label">Set Icon</label>
         <input type="file" id="imageUpload" name="image" accept="image/*">
         <label for="chat-name" class="label">Chat Name</label>
-        <input type="text" id="chat-name" name="chat-name" class="input-text" placeholder="Your chat" autocomplete="off">
+        <input type="text" id="chat-name" name="chat-name" class="input-text" placeholder="Your chat" maxlength="50" autocomplete="off">
         <div class="popup-bottom">
             <button type="submit" class="button popup-option" id="groupdm-create">Create</button>
         </div>

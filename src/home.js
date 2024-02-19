@@ -60,7 +60,7 @@ createGroupDm.addEventListener("click", (event) => {
       closeSetup(groupDM)
       //history.pushState(null, null, `/chat/${responseData.id}`);
       const createdChat = createChatElement(chatName, responseData.id)
-      chatContainer.appendChild(createdChat)
+      chatContainer.append(createdChat)
       console.log(createdChat)
       redirect(responseData.id, createdChat)
       createdChat.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -174,46 +174,46 @@ function createChatElement(chat, chatID) {
   chatDiv.addEventListener("click", function () {
     redirect(chatID, chatDiv);
   });
-  // let hoverTimeout
-  // chatDiv.addEventListener('mouseenter', function() {
-  //   function showHoverDiv() {
-  //     const hoverDiv = document.createElement("div");
-  //     hoverDiv.textContent = chat; 
-  //     hoverDiv.style.position = "absolute";
-  //     hoverDiv.style.background = "#2E2E2E"; 
-  //     hoverDiv.style.color = "#D4D4D4"; 
-  //     hoverDiv.style.padding = "3px 8px"; 
-  //     hoverDiv.style.borderRadius = "10px"; 
-  //     hoverDiv.style.maxWidth = '200px';
-  //     hoverDiv.style.overflowWrap = 'anywhere'
+  let hoverTimeout
+  chatDiv.addEventListener('mouseenter', function() {
+    function showHoverDiv() {
+      const hoverDiv = document.createElement("div");
+      hoverDiv.textContent = chat; 
+      hoverDiv.style.position = "absolute";
+      hoverDiv.style.background = "#2E2E2E"; 
+      hoverDiv.style.color = "#D4D4D4"; 
+      hoverDiv.style.padding = "3px 8px"; 
+      hoverDiv.style.borderRadius = "10px"; 
+      hoverDiv.style.maxWidth = '200px';
+      hoverDiv.style.overflowWrap = 'anywhere'
   
-  //     const rect = chatDiv.getBoundingClientRect();
-  //     const centerX = rect.left + rect.width / 2;
-  //     const top = rect.top;
+      const rect = chatDiv.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const top = rect.top;
   
   
-  //     document.body.appendChild(hoverDiv);
-  //     hoverDiv.style.left = centerX - (hoverDiv.clientWidth/2) + 'px';
-  //     hoverDiv.style.top = top - 40 + 'px';
-  //     chatDiv.hoverDiv = hoverDiv;
-  //   }
-  //   if (chatName.scrollWidth > chatName.clientWidth) {
-  //     hoverTimeout = setTimeout(showHoverDiv, 1000)
-  //   }
-  // })
-  // chatDiv.addEventListener('mouseleave', function() {
-  //   clearTimeout(hoverTimeout)
-  //   if (chatDiv.hoverDiv) {
-  //     chatDiv.hoverDiv.remove();
-  //     chatDiv.hoverDiv = null; // Remove the reference
-  //   }
-  // })
-  // chatContainer.addEventListener('scroll', function() {
-  //   if (chatDiv.hoverDiv) {
-  //     chatDiv.hoverDiv.remove();
-  //     chatDiv.hoverDiv = null;
-  //   }
-  // });
+      document.body.appendChild(hoverDiv);
+      hoverDiv.style.left = centerX - (hoverDiv.clientWidth/2) + 'px';
+      hoverDiv.style.top = top - hoverDiv.clientHeight - 5 + 'px';
+      chatDiv.hoverDiv = hoverDiv;
+    }
+    if (chatName.scrollWidth > chatName.clientWidth) {
+      hoverTimeout = setTimeout(showHoverDiv, 1000)
+    }
+  })
+  chatDiv.addEventListener('mouseleave', function() {
+    clearTimeout(hoverTimeout)
+    if (chatDiv.hoverDiv) {
+      chatDiv.hoverDiv.remove();
+      chatDiv.hoverDiv = null; // Remove the reference
+    }
+  })
+  chatContainer.addEventListener('scroll', function() {
+    if (chatDiv.hoverDiv) {
+      chatDiv.hoverDiv.remove();
+      chatDiv.hoverDiv = null;
+    }
+  });
   return chatDiv;
 }
 
@@ -271,20 +271,12 @@ async function getChat(endpoint) {
   let loading
   // Function to add loading spinner after a delay
   function addLoadingSpinner() {
-    loading = document.createElement('img');
-    loading.setAttribute('src', '/assets/loading.svg');
-    loading.style.width = '100px';
-    loading.style.height = '100px';
-    loading.style.position = 'absolute';
-    messageContainer.append(loading);
-
-    let boundingClient = messageContainer.getBoundingClientRect();
-    let centerX = boundingClient.left + boundingClient.width / 2;
-    let centerY = boundingClient.top + boundingClient.height / 2; 
-
-    loading.style.left = centerX - loading.offsetWidth / 2 + 'px';
-    loading.style.top = centerY - loading.offsetHeight / 2 + 'px';
-  
+    const loading = document.getElementById('loading')
+    loading.style.display = 'block'
+    centerElement(loading, messageContainer)
+    window.addEventListener('resize', (event) => {
+      centerElement(loading, messageContainer)
+    });
     console.log("Loading spinner added to message container."); 
   }
 
@@ -311,7 +303,17 @@ async function getChat(endpoint) {
           dateSent = updateTimestamp(dateSent);
           return { username, content: message.Content, userIcon, dateSent };
         });
-        
+
+        const noMessages = document.getElementById('no-messages')
+        if (messagesData.length === 0) {
+          noMessages.style.display = 'block'
+          centerElement(noMessages, messageContainer)
+          window.addEventListener('resize', (event) => {
+            centerElement(noMessages, messageContainer)
+          });
+        } else {
+          noMessages.style.display = 'none'
+        }
 
         // Now that all messages are loaded, make the chat container visible
         if (loading) {
@@ -362,6 +364,15 @@ function updateTimestamp(text) {
   }
 
   return text;
+}
+
+function centerElement(element, container) {
+  let boundingClient = container.getBoundingClientRect();
+  let centerX = boundingClient.left + boundingClient.width / 2;
+  let centerY = boundingClient.top + boundingClient.height / 2; 
+
+  element.style.left = centerX - element.offsetWidth / 2 + 'px';
+  element.style.top = centerY - element.offsetHeight / 2 + 'px';
 }
 
 document.fonts.ready.then(() => {

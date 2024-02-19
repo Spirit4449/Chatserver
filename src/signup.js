@@ -56,8 +56,6 @@ signupForm.addEventListener("submit", async function (event) {
       passwordInput.value,
       key
     ).toString();
-    // url = '/check-email?email=' + encodeURIComponent(encryptedEmail) + '&username=' + encodeURIComponent(encryptedUsername) + '&password=' + encodeURIComponent(encryptedPassword);
-    // window.location.href = url
     fetch("/check-email", {
       method: "POST",
       headers: {
@@ -73,9 +71,7 @@ signupForm.addEventListener("submit", async function (event) {
           emailError.textContent = "- Email already in use";
         } else {
           // send email here
-          //animateContainer(emailInput.value, usernameInput.value, passwordInput.value);
-          // check if the verification code matches here
-          register(encryptedEmail, encryptedUsername, encryptedPassword);
+          animateContainer(emailInput.value, encryptedEmail, encryptedUsername, encryptedPassword);
         }
       })
       .catch((error) => {
@@ -91,20 +87,21 @@ function validateEmail(email) {
 }
 
 // Send a request to the new route when needed
-function sendVerificationCodeEmail(email) {
-  fetch("/send-code", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ email }),
-  })
-    .then(() => {
-      console.log("code sent");
-    })
-    .catch((error) => {
-      console.error("Request failed:", error);
+async function sendVerificationCodeEmail(email) {
+  try {
+    const response = await fetch("/send-code", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email }),
     });
+    const data = await response.json();
+    return data.code;
+  } catch (error) {
+    console.error("Request failed:", error);
+    throw error;
+  }
 }
 
 passwordToggle.addEventListener('click', (event) => {
@@ -118,7 +115,7 @@ passwordToggle.addEventListener('click', (event) => {
 });
 
 
-function animateContainer(email, username, password) {
+function animateContainer(email, encryptedEmail, username, password) {
   console.log("animating");
   const currentHeight = container.clientHeight;
   let transitionsEnded = 0;
@@ -128,13 +125,13 @@ function animateContainer(email, username, password) {
       transitionsEnded++;
       if (transitionsEnded === signupGroup.length) {
         container.removeChild(signupForm);
-        addVerificationForm(email, username, password);
+        addVerificationForm(email, encryptedEmail, username, password);
       }
     });
   });
 }
 
-function addVerificationForm(email, username, password) {
+function addVerificationForm(email, encryptedEmail, username, password) {
   console.log("adding verification form");
   const verification = document.createElement("div");
   const instructions = document.createElement("p");
@@ -148,6 +145,12 @@ function addVerificationForm(email, username, password) {
   instructions.style.textAlign = "left";
   instructions.style.fontSize = "15px";
 
+  const codeError = document.createElement('p')
+  codeError.style.color = '#fa777c'
+  codeError.style.textAlign = "left"
+  codeError.style.margin = '0'
+  codeError.style.fontSize = "15px";
+
   const verificationGroup = document.createElement("div");
   verificationGroup.classList.add("form-group");
 
@@ -156,6 +159,7 @@ function addVerificationForm(email, username, password) {
   verificationInput.setAttribute("id", "verification-code");
   verificationInput.setAttribute("name", "verification-code");
   verificationInput.setAttribute("placeholder", "Enter your verification code");
+  verificationInput.style.marginTop = '0'
 
   const verifyButton = document.createElement("button");
   verifyButton.setAttribute("type", "submit");
@@ -163,15 +167,30 @@ function addVerificationForm(email, username, password) {
   verifyButton.setAttribute("id", "verify");
   verifyButton.textContent = "Verify";
 
-  function registerClick() {
-    register(email, username, password, verificationInput.value);
-  }
-  verifyButton.onclick = registerClick;
+  (async () => {
+    const code = await sendVerificationCodeEmail(email);
+    console.log(code)
+    function registerClick() {
+      if (Number(verificationInput.value) === code) {
+        register(encryptedEmail, username, password, codeError);
+      } else {
+        codeError.textContent = 'Incorrect code'
+      }
+    }
+    verifyButton.onclick = registerClick;
+    verificationInput.addEventListener('input', function(event) {
+      if (codeError.textContent !== '') {
+        codeError.textContent = ''
+      }
+    })
+  })();
+
 
   verificationGroup.appendChild(verificationInput);
   verificationGroup.appendChild(verifyButton);
 
   verification.appendChild(instructions);
+  verification.appendChild(codeError)
   verification.appendChild(verificationGroup);
   verification.setAttribute("id", "verification");
   verification.setAttribute("class", "verification-group");
@@ -189,7 +208,7 @@ function addVerificationForm(email, username, password) {
   smallText.onclick = goBackPage;
 }
 
-async function register(email, username, password) {
+async function register(email, username, password, codeError) {
   try {
     const response = await fetch("/register-user", {
       method: "POST",
@@ -202,9 +221,9 @@ async function register(email, username, password) {
         password: password,
       }),
     });
+    const data = await response.json();
 
     if (response.status === 200) {
-      const data = await response.json();
       if (data.accessCode) {
         createCookie("mcCode", data.accessCode, 90);
       }
@@ -212,8 +231,8 @@ async function register(email, username, password) {
       console.log("Registration successful");
       window.location.href = "/home";
     } else {
-      console.error("Registration failed. Status:", response.status);
-      // You might want to handle other HTTP status codes here
+        console.error("Registration failed. Status:", response.status);
+        codeError.textContent = data.message
     }
   } catch (error) {
     console.error("Request failed:", error);
@@ -222,7 +241,7 @@ async function register(email, username, password) {
 }
 
 function goBackPage() {
-  verification = document.getElementById("verification");
+  const verification = document.getElementById("verification");
   verification.classList.add("animate-out");
   verification.addEventListener("transitionend", function () {
     verification.remove();

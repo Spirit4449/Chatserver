@@ -67,8 +67,8 @@ h6 {
     color: #d7d7d7;
     font-size: 17px;
     font-weight: 400;
-    border-radius: 10px;
     flex-grow: 1;
+    white-space: nowrap;
 }
 
 .search {
@@ -477,11 +477,12 @@ label.selected {
     border-right: 1px solid #414043;
     border-top-left-radius: 6px;
     border-bottom-left-radius: 6px;
-    padding-bottom: 55px;
     background: linear-gradient(to top right, rgba(20, 20, 20, 0.865), rgba(26, 25, 26, 0.865));
     height: 100%;
     overflow-y: hidden;
     overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
 }
 
 .header {
@@ -533,6 +534,18 @@ h3 {
     color: #9d9d9d
 }
 
+#no-messages {
+    display: none;
+    position: absolute;
+}
+
+#loading {
+    width: 100px;
+    height: 100px;
+    position: absolute;
+    display: none;
+}
+
 #icon {
     font-variation-settings:
         'FILL' 1,
@@ -547,9 +560,10 @@ h3 {
     flex-direction: column;
     align-items: center;
     overflow-y: scroll;
-    height: 100%;
     padding-top: 5px;
+    padding-bottom: 5px;
     overflow-x: hidden;
+    gap: 5px;
 }
 
 .chat {
@@ -561,7 +575,6 @@ h3 {
     box-sizing: border-box;
     width: 96%;
     cursor: pointer;
-    margin-bottom: 4px;
 }
 .chat:not(.selected) > h6 {
     color: rgb(194, 194, 194);
@@ -640,10 +653,10 @@ p {
     padding-top: 10px;
 }
 
-#submit {
+#send {
     height: 60%;
     margin-right: 10px;
-    margin-left: 12px;
+    margin-left: 10px;
     cursor: pointer;
     fill: red;
 }
@@ -727,7 +740,7 @@ p {
 .custom-scrollbar::-webkit-scrollbar-track {
     background-color: #353535; /* Set the color of the track (the non-draggable part of the scrollbar) */
     border-radius: 6px; /* Add some border-radius for a rounded appearance */
-    margin: 10px;
+    margin: 2px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {

@@ -8,86 +8,89 @@ const messageContainer = document.getElementById('message-container')
 var username
 var profileIcon
 
-document.addEventListener('DOMContentLoaded', function () {
-  const navbar = document.querySelector('.navbar'); 
-  const container = document.querySelector('.content');
+const navbar = document.querySelector('.navbar'); 
+const container = document.querySelector('.content');
 
-  if (navbar && container) {
-    const navbarHeight = navbar.getBoundingClientRect().height;
-    //container.style.marginTop = `${navbarHeight}px`;
-    container.style.height = `calc(99vh - ${navbarHeight}px)`;
+if (navbar && container) {
+  const navbarHeight = navbar.getBoundingClientRect().height;
+  //container.style.marginTop = `${navbarHeight}px`;
+  container.style.height = `calc(99vh - ${navbarHeight}px)`;
+}
+
+messageInput.addEventListener('keypress', function (event) {
+  if (event.key === 'Enter' && messageInput.value.trim() !== '' && !event.shiftKey) {
+    send();
   }
-
-  messageInput.addEventListener('keypress', function (event) {
-    if (event.key === 'Enter' && messageInput.value.trim() !== '' && !event.shiftKey) {
-      send();
-    }
-  });
-
-  const create = document.getElementById('create-new');
-  const createMenu = document.getElementById('create');
-
-  create.addEventListener('click', function (event) {
-    if (!(create.classList.contains('animate-rotate'))) {
-      event.stopPropagation();
-      create.classList.remove('animate-rotate-out')
-      // Check if the 'animate-left' class is present
-      if (createMenu.classList.contains('animate-left')) {
-        createMenu.style.display = "none";
-        createMenu.classList.remove('animate-left');
-      } else {
-        var offsetLeft = create.offsetLeft + create.offsetWidth + 8;
-        var buttonBottom = create.offsetTop + create.offsetHeight;
-        createMenu.style.left = offsetLeft + "px";
-        createMenu.style.bottom = 50 + "px";
-        createMenu.style.display = "block";
-        createMenu.classList.add('animate-left');
-        create.classList.add('animate-rotate')
-      }
-    }
-    window.onclick = function (event) {
-      var popup = document.getElementById("create");
-      if (event.target !== popup && !popup.contains(event.target) && popup.style.display === 'block') {
-        closePopup(popup);
-      }
-    };
-  });
-
-  const createGroupDMButton = document.getElementById('create-group-dm')
-  createGroupDMButton.addEventListener('click', function (event) {
-    console.log('button clicked')
-    event.stopPropagation();
-    const createGroupDM = document.getElementById('group-dm')
-    createGroupDM.style.display = 'block'
-    const darkOverlayCheck = document.getElementById('dark-overlay')
-    if (!darkOverlayCheck) {
-      const darkOverlay = document.createElement('div')
-      darkOverlay.classList.add('dark-overlay')
-      darkOverlay.setAttribute('id', 'dark-overlay')
-      createGroupDM.style.left = '50%';
-      createGroupDM.style.top = "50%";
-      createGroupDM.style.transform = "translate(-50%, -50%)";
-      document.body.appendChild(darkOverlay)
-    }
-    closePopup(document.getElementById("create"));
-    const closeGroupDM = document.getElementById('close-groupdm')
-    closeGroupDM.addEventListener('click', function (event) {
-      closeSetup(createGroupDM);
-    })
-    window.onclick = function (event) {
-      if (event.target !== createGroupDM && !createGroupDM.contains(event.target) && createGroupDM.style.display === 'block') {
-        closeSetup(createGroupDM);
-      }
-    };
-  })
-
-
-  const serverDropdown = document.getElementById('server-options')
-  serverDropdown.addEventListener('click', function (event) {
-    event.preventDefault()
-  })
-
 });
+
+const create = document.getElementById('create-new');
+const createMenu = document.getElementById('create');
+
+create.addEventListener('click', function (event) {
+  if (!(create.classList.contains('animate-rotate'))) {
+    event.stopPropagation();
+    create.classList.remove('animate-rotate-out')
+    // Check if the 'animate-left' class is present
+    if (createMenu.classList.contains('animate-left')) {
+      createMenu.style.display = "none";
+      createMenu.classList.remove('animate-left');
+    } else {
+      var offsetLeft = create.offsetLeft + create.offsetWidth + 8;
+      var buttonBottom = create.offsetTop + create.offsetHeight;
+      createMenu.style.left = offsetLeft + "px";
+      createMenu.style.bottom = 50 + "px";
+      createMenu.style.display = "block";
+      createMenu.classList.add('animate-left');
+      create.classList.add('animate-rotate')
+    }
+  }
+  window.onclick = function (event) {
+    var popup = document.getElementById("create");
+    if (event.target !== popup && !popup.contains(event.target) && popup.style.display === 'block') {
+      closePopup(popup);
+    }
+  };
+});
+
+const createGroupDMButton = document.getElementById('create-group-dm')
+createGroupDMButton.addEventListener('click', function (event) {
+  console.log('button clicked')
+  event.stopPropagation();
+  const createGroupDM = document.getElementById('group-dm')
+  createGroupDM.style.display = 'block'
+  const darkOverlayCheck = document.getElementById('dark-overlay')
+  if (!darkOverlayCheck) {
+    const darkOverlay = document.createElement('div')
+    darkOverlay.classList.add('dark-overlay')
+    darkOverlay.setAttribute('id', 'dark-overlay')
+    createGroupDM.style.left = '50%';
+    createGroupDM.style.top = "50%";
+    createGroupDM.style.transform = "translate(-50%, -50%)";
+    document.body.appendChild(darkOverlay)
+  }
+  closePopup(document.getElementById("create"));
+  const closeGroupDM = document.getElementById('close-groupdm')
+  closeGroupDM.addEventListener('click', function (event) {
+    closeSetup(createGroupDM);
+  })
+  window.onclick = function (event) {
+    if (event.target !== createGroupDM && !createGroupDM.contains(event.target) && createGroupDM.style.display === 'block') {
+      closeSetup(createGroupDM);
+    }
+  };
+})
+
+const sendButton = document.getElementById('send')
+sendButton.addEventListener('click', function() {
+  send()
+})
+
+
+const serverDropdown = document.getElementById('server-options')
+serverDropdown.addEventListener('click', function (event) {
+  event.preventDefault()
+})
+
 
 function closeSetup(popup) {
   popup.classList.add('zoomout')
@@ -159,7 +162,16 @@ function appendMessage(message) {
   const messageElement = document.createElement('div');
   messageElement.innerText = message;
   messageContainer.append(messageElement);
-  messageContainer.scrollTop = messageContainer.scrollHeight;
+  messageContainer.scrollTo({
+    top: messageContainer.scrollHeight,
+    behavior: 'smooth'
+  });
+  
+
+  const noMessage = document.getElementById('no-messages')
+  if (noMessage.style.display === 'block') {
+    noMessage.style.display = 'none'
+  }
 }
 
 function appendRichMessage(name, messagetext, icon, timestamp) {
@@ -200,7 +212,16 @@ function appendRichMessage(name, messagetext, icon, timestamp) {
 
   message.append(content)
   messageContainer.appendChild(message);
-  messageContainer.scrollTop = messageContainer.scrollHeight;
+  messageContainer.scrollTo({
+    top: messageContainer.scrollHeight,
+    behavior: 'smooth'
+  });
+  
+
+  const noMessage = document.getElementById('no-messages')
+  if (noMessage.style.display === 'block') {
+    noMessage.style.display = 'none'
+  }
 }
 
 function formatChatDate(timestamp) {
