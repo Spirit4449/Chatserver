@@ -3,22 +3,25 @@ import { updateTimestamp } from "./home";
 const socket = io("/");
 const messageInput = document.getElementById('message-input');
 const messageContainer = document.getElementById('message-container')
-
+const messageInputContainer = document.getElementById('message-input-container')
 
 var username
 var profileIcon
 
 const navbar = document.querySelector('.navbar'); 
 const container = document.querySelector('.content');
+const sidebar = document.getElementById('sidebar')
 
-if (navbar && container) {
+if (navbar && container && sidebar) {
   const navbarHeight = navbar.getBoundingClientRect().height;
-  //container.style.marginTop = `${navbarHeight}px`;
+  const sidebarWidth = sidebar.getBoundingClientRect().width;
   container.style.height = `calc(99vh - ${navbarHeight}px)`;
+  container.style.width = `calc(99vw - ${sidebarWidth}px)`
 }
 
 messageInput.addEventListener('keypress', function (event) {
   if (event.key === 'Enter' && messageInput.value.trim() !== '' && !event.shiftKey) {
+    event.preventDefault();
     send();
   }
 });
@@ -73,11 +76,11 @@ createGroupDMButton.addEventListener('click', function (event) {
   closeGroupDM.addEventListener('click', function (event) {
     closeSetup(createGroupDM);
   })
-  window.onclick = function (event) {
+  window.addEventListener('mousedown', function(event) {
     if (event.target !== createGroupDM && !createGroupDM.contains(event.target) && createGroupDM.style.display === 'block') {
       closeSetup(createGroupDM);
     }
-  };
+  });
 })
 
 const sendButton = document.getElementById('send')
@@ -135,7 +138,12 @@ function send() {
           timestamp = formatChatDate(timestamp)
           let formattedTimestamp = updateTimestamp(timestamp)
           socket.emit('send-chat-message', { id, username, message, profileIcon, endpoint, timestamp, formattedTimestamp });
+
           messageInput.value = '';
+          messageInput.style.height = 'auto'; // Reset height to allow it to shrink
+          messageInputContainer.style.height = 'auto'
+          messageInput.style.height = `${messageInput.scrollHeight}px`; // Expand textarea
+          messageInputContainer.style.height = `${messageInput.scrollHeight}px`; // Update container height
         }
       }
     })
@@ -158,14 +166,19 @@ socket.on('user-disconnected', name => {
   appendMessage(`${name} disconnected`);
 });
 
-function appendMessage(message) {
+function appendMessage(message, smooth=true) {
   const messageElement = document.createElement('div');
   messageElement.innerText = message;
   messageContainer.append(messageElement);
-  messageContainer.scrollTo({
-    top: messageContainer.scrollHeight,
-    behavior: 'smooth'
-  });
+
+  if (smooth) {
+    messageContainer.scrollTo({
+      top: messageContainer.scrollHeight,
+      behavior: 'smooth'
+    });
+  } else {
+    messageContainer.scrollTop = messageContainer.scrollHeight;
+  }
   
 
   const noMessage = document.getElementById('no-messages')
@@ -174,7 +187,7 @@ function appendMessage(message) {
   }
 }
 
-function appendRichMessage(name, messagetext, icon, timestamp) {
+function appendRichMessage(name, messagetext, icon, timestamp, smooth=true) {
   const message = document.createElement('div');
   message.classList.add('message');
 
@@ -204,18 +217,24 @@ function appendRichMessage(name, messagetext, icon, timestamp) {
 
   content.appendChild(nameDateElement);
 
+
   // Create message text element
   const messageTextElement = document.createElement('p');
-  messageTextElement.textContent = messagetext;
+  messageTextElement.innerText = messagetext;
   messageTextElement.classList.add('message-text');
   content.appendChild(messageTextElement);
 
   message.append(content)
   messageContainer.appendChild(message);
-  messageContainer.scrollTo({
-    top: messageContainer.scrollHeight,
-    behavior: 'smooth'
-  });
+
+  if (smooth) {
+    messageContainer.scrollTo({
+      top: messageContainer.scrollHeight,
+      behavior: 'smooth'
+    });
+  } else {
+    messageContainer.scrollTop = messageContainer.scrollHeight;
+  }
   
 
   const noMessage = document.getElementById('no-messages')
@@ -239,5 +258,6 @@ function formatChatDate(timestamp) {
 
   return `${month}/${day}/${year} at ${formattedHours}:${formattedMinutes}${period}`;
 }
+
 
 export { formatChatDate, appendRichMessage, appendMessage, closeSetup }

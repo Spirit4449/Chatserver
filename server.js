@@ -81,7 +81,7 @@ app.use(
 
 const rateLimitOptions = {
   windowMs: 60 * 1000, // 1 minute
-  max: 10, // Max 10 requests per minute per IP address
+  max: 3, // Max 10 requests per minute per IP address
   message: "You are creating too many rooms! Try again later...",
   keyGenerator: function (req) {
     // Use the client's IP address as the key for rate limiting
@@ -141,15 +141,7 @@ async function executeQuery(query, values) {
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 // Nodemailer
-// const transporter = nodemailer.createTransport({
-//   service: 'smtp-relay.brevo.com',
-//   port: 587,
-//   secure: false,
-//   auth: {
-//     user: 'nischaydas510@gmail.com',
-//     pass: 'Akshardhammail'
-//   }
-// });
+
 
 
 
@@ -321,6 +313,33 @@ app.get("/getchat/:id", async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
+
+app.post('/get-users/:id', async (req, res) => {
+  const chatID = req.params.id;
+
+  const conn = await pool.getConnection();
+
+  // Query to fetch usernames, profile icons, and other relevant data
+  const userQuery = `
+      SELECT u.Username, u.ProfileIcon
+      FROM userchats uc
+      INNER JOIN users u ON uc.UserID = u.UserID
+      WHERE uc.ChatID = ?
+  `;
+
+  try {
+      // Execute the query
+      const userResults = await conn.query(userQuery, [chatID]);
+
+      // Send the results as JSON response
+      res.status(200).json({ success: true, users: userResults });
+      conn.release()
+  } catch (error) {
+      console.error("Error retrieving users:", error);
+      res.status(500).json({ success: false, error: "Error retrieving users" });
+  }
+});
+
 
 
 app.post("/check-email", async (req, res) => {

@@ -13,6 +13,10 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <script src="/socket.io/socket.io.js"></script>
     <link rel="stylesheet" href="/Pages/Home/home.css">
+    <link rel="stylesheet" href="/Pages/Home/create.css">
+    <link rel="stylesheet" href="/Pages/Home/groupdm.css">
+    <link rel="stylesheet" href="/Pages/Home/popup.css">
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
 </head>
 <body>
@@ -29,7 +33,7 @@
             </div>
         </div>
         <div class="body">
-            <div class="sidebar">
+            <div class="sidebar" id="sidebar">
                 <div class="panels">
                     <div class="panel">
                         <span class="material-symbols-rounded">home</span>
@@ -67,19 +71,26 @@
                             <h3 id="chat-name-header"></h3>
                             <span class="material-symbols-rounded" id="server-options">expand_more</span>
                         </div>
-                        <span id="icon2" class="material-symbols-rounded">person</span>
+                        <span id="person" class="material-symbols-rounded toggled">groups</span>
                     </div>
                     <div class="messages" id="messages">
                         <div class="message-container custom-scrollbar" id="message-container">
                         </div>
                         <div class="input" id="message-input-container">
                             <span class="material-symbols-rounded" id="attatchment">attach_file</span>
-                            <textarea type="text" class="message-input custom-scrollbar" id="message-input" placeholder="" autocomplete="off" maxlength="4000" autofocus></textarea>
+                            <textarea type="text" class="message-input custom-scrollbar" id="message-input" placeholder="" autocomplete="off" maxlength="4000" rows="1" autofocus></textarea>
                             <span class="material-symbols-rounded" id="attatchment">sentiment_satisfied</span>
                             <span class="material-symbols-rounded" id="attatchment">gif_box</span>
                             <span class="material-symbols-rounded" id="attatchment">code_blocks</span>
                             <img src="/assets/send.svg" id="send" width="20xp" height="20px"></img>
                         </div>
+                    </div>
+                </div>
+                <div class="members" id="members">
+                    <div class="header" id="members-header">
+                        <h3 id="members-header">Members</h3>
+                    </div>
+                    <div id="members-list">
                     </div>
                 </div>
                 <div id="no-chat-selected">
@@ -129,9 +140,6 @@
                     <h5>Public Chat</h5>
                     <p>Create a public chat that anyone can join with invite link</p>
                 </div>
-            </div>
-            <div>
-    
             </div>
             <div>
     

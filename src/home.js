@@ -4,8 +4,8 @@ import { formatChatDate, appendMessage, appendRichMessage, closeSetup } from "./
 var chatDisplay = document.getElementById("chat-display");
 const messageContainer = document.getElementById('message-container')
 const chatContainer = document.getElementById("chat-container");
-
-
+const membersList = document.getElementById('members-list')
+const membersContainer = document.getElementById('members')
 
 fetch("/profile")
   .then((response) => { 
@@ -60,10 +60,10 @@ createGroupDm.addEventListener("click", (event) => {
       closeSetup(groupDM)
       //history.pushState(null, null, `/chat/${responseData.id}`);
       const createdChat = createChatElement(chatName, responseData.id)
-      chatContainer.append(createdChat)
+      chatContainer.insertBefore(createdChat, chatContainer.firstChild)
       console.log(createdChat)
       redirect(responseData.id, createdChat)
-      createdChat.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      createdChat.scrollIntoView({ behavior: 'smooth', block: 'center' });
     })
     .catch((error) => {
       console.error("Error creating chat:", error);
@@ -102,6 +102,20 @@ panels.forEach((panel, index) => {
       .classList.add("selected");
     labels[index].classList.add("selected");
   });
+});
+
+const person = document.getElementById('person')
+person.addEventListener('click', (event) => {
+  console.log(membersContainer.style.width);
+  if (membersContainer.style.width === '0px') {
+    membersContainer.style.width = '18%'
+    membersContainer.style.borderLeft = '1px solid #414043';
+    person.classList.add('toggled')
+  } else {
+      membersContainer.style.width = '0'
+      membersContainer.style.borderLeft = 'none'
+      person.classList.remove('toggled')
+    }
 });
 
 
@@ -232,11 +246,22 @@ function redirect(chatID, chatDiv) {
   icons.forEach((icon) => {
     icon.style.visibility = "visible";
   });
+  if (membersContainer.style.visibility === 'hidden') {
+    membersContainer.style.visibility = "visible"
+  }
   document.getElementById("no-chat-selected").style.display = "none";
+
+  // Remove all children from chats
   while (messageContainer.firstChild) {
     messageContainer.removeChild(messageContainer.firstChild);
   }
+  // Remove all children from members
+  while (membersList.firstChild) {
+    membersList.removeChild(membersList.firstChild);
+  }
+
   getChat(chatID);
+  getUsers(chatID)
 }
 
 // Create a button element with text and click handler
@@ -249,22 +274,29 @@ function createButton(text, clickHandler) {
 }
 
 
-  const textarea = document.getElementById("message-input");
+const textarea = document.getElementById("message-input");
+const messageInputContainer = document.getElementById('message-input-container')
+const messages = document.getElementById('messages')
 
-  textarea.addEventListener("scroll", function (event) {
-    if (this.scrollHeight > this.clientHeight) {
-      // The textarea is overflowing
-      const messageContainer = document.getElementById(
-        "message-input-container"
-      );
-      let currentHeight = parseInt(getComputedStyle(messageContainer).height);
-      if (currentHeight <= 20) {
-        currentHeight += 30;
-        textarea.style.height = `${currentHeight}px`;
-        messageContainer.style.height = `${currentHeight}px`;
-      }
-    }
-  });
+messageInputContainer.style.height = `${textarea.scrollHeight}px`;
+
+textarea.addEventListener("input", function (event) {
+  textarea.style.height = 'auto'; // Reset height to allow it to shrink
+  messageInputContainer.style.height = 'auto'; // Reset container height
+  const newHeight = `${textarea.scrollHeight}px`; // Get the new height
+  const newHeightPercent = parseInt(newHeight) * 100 / messages.clientHeight 
+
+
+  if (newHeightPercent <= 50) { // Assuming MAX_HEIGHT is the maximum height for messageInputContainer
+      textarea.style.height = newHeight; // Set textarea height
+      messageInputContainer.style.height = newHeight; // Set container height
+  } else {
+      textarea.style.height = `${100}%`; // Set textarea to max height
+      messageInputContainer.style.height = `${50}%`; // Set container to max height
+  }
+});
+
+
 
 async function getChat(endpoint) {
   let loadingTimer;
@@ -326,7 +358,8 @@ async function getChat(endpoint) {
             messageData.username,
             messageData.content,
             messageData.userIcon,
-            messageData.dateSent
+            messageData.dateSent,
+            false
           );
         }
       } else {
@@ -344,7 +377,46 @@ async function getChat(endpoint) {
       }
       messageContainer.style.visibility = "visible";
     }
+
+    textarea.focus()
   }
+}
+
+async function getUsers(endpoint) {
+  fetch(`/get-users/${endpoint}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+  .then(response => response.json())
+  .then(data => {
+    console.log(data);
+    const members = data.users
+    members.forEach(member => {
+      const username = member['Username']
+      const profileIcon = member['ProfileIcon']
+
+      const div = document.createElement('div')
+      div.classList.add("member")
+
+      const profileIconImage = document.createElement('img')
+      profileIconImage.setAttribute("src", `/assets/Profile Icons/${profileIcon}`)
+      profileIconImage.classList.add("profile-icon")
+
+      const usernameElement = document.createElement('h6')
+      usernameElement.textContent = username
+
+      div.appendChild(profileIconImage)
+      div.appendChild(usernameElement)
+
+      membersList.appendChild(div)
+  
+    });
+  })
+  .catch(error => {
+    console.error('Error:', error);
+  });
 }
 
 function updateTimestamp(text) {
@@ -392,6 +464,7 @@ function setChatBackground() {
   if (window.location.pathname === "/home") {
     // Hide the chat header
     chatDisplay.style.visibility = "hidden";
+    membersContainer.style.visibility = "hidden"
     const icons = chatDisplay.querySelectorAll(".material-symbols-rounded");
     icons.forEach((icon) => {
       icon.style.visibility = "hidden";
@@ -418,6 +491,7 @@ function createChat(color) {
   h6Element.style.backgroundColor = color;
   h6Element.style.userSelect = "none";
   h6Element.style.pointerEvents = "none";
+  h6Element.style.borderRadius = '10px'
 
   chatElement.appendChild(chatIcon);
   chatElement.appendChild(h6Element);
