@@ -1,5 +1,7 @@
 // Globals
-const key = '1837key';
+import { key } from "../globals";
+console.log(key);
+// const key = '1837key';
 const mcConsoleAccess = ['100000'] //Nischay, ..
 
 // Express
