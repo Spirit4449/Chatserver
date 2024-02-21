@@ -486,7 +486,6 @@ p {
   gap: 5px;
   width: 100%;
   flex-grow: 1;
-  border: 1px solid red;
   box-sizing: border-box;
 }
 
