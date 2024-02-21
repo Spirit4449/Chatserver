@@ -6,6 +6,12 @@ const messageContainer = document.getElementById('message-container')
 const chatContainer = document.getElementById("chat-container");
 const membersList = document.getElementById('members-list')
 const membersContainer = document.getElementById('members')
+const welcomeMessage = document.getElementById('welcome-message')
+
+const rateLimit = document.getElementById('rate-limit')
+const rateLimitMessage = document.getElementById('rate-limit-message');
+
+const darkOverlay = document.getElementById('dark-overlay')
 
 fetch("/profile")
   .then((response) => { 
@@ -34,40 +40,54 @@ setChatBackground();
 const createGroupDm = document.getElementById("groupdm-create");
 
 createGroupDm.addEventListener("click", (event) => {
-  const chatName = document.getElementById("chat-name").value;
-
-
-  const data = {
-    name: chatName,
-  };
-
-  fetch("/chat", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(data),
-  })
-    .then((response) => {
-      if (response.ok) {
-        return response.json();
-      } else {
-        //throw new Error(`Failed to create chat. Status: ${response.status}`);
-      }
+  const label = document.getElementById('chat-name-label')
+  const chatNameElement = document.getElementById("chat-name")
+  const chatName = chatNameElement.value;
+  console.log(chatName);
+  if (chatName !== '') {
+    const data = {
+      name: chatName,
+    };
+  
+    fetch("/chat", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
     })
-    .then((responseData) => {
-      const groupDM = document.getElementById('group-dm')
-      closeSetup(groupDM)
-      //history.pushState(null, null, `/chat/${responseData.id}`);
-      const createdChat = createChatElement(chatName, responseData.id)
-      chatContainer.insertBefore(createdChat, chatContainer.firstChild)
-      console.log(createdChat)
-      redirect(responseData.id, createdChat)
-      createdChat.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    })
-    .catch((error) => {
-      console.error("Error creating chat:", error);
-    });
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        } else if (response.status === 429) {
+          rateLimitMessage.textContent = 'You are creating too many servers. Try again in a few minutes'
+          rateLimit.style.display = 'block'
+          darkOverlay.style.zIndex = '4'
+          throw new Error('Too many requests');
+        } else {
+          throw new Error('Network response was not ok.');
+        }
+      })
+      .then((responseData) => {
+        const groupDM = document.getElementById('group-dm')
+        closeSetup(groupDM)
+        label.style.color = '#cdcdcd'
+        label.textContent = 'Chat Name'
+        chatName.value = ''
+        const createdChat = createChatElement(chatName, responseData.id)
+        chatContainer.insertBefore(createdChat, chatContainer.firstChild)
+        console.log(createdChat)
+        redirect(responseData.id, createdChat)
+        createdChat.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      })
+      .catch((error) => {
+        console.error("Error creating chat:", error);
+      });
+  } else {
+    label.style.color = '#fa777c'
+    label.textContent = 'Chat Name - please provide a name'
+  }
+  
 });
 
 const panels = document.querySelectorAll(".panel");
@@ -118,6 +138,23 @@ person.addEventListener('click', (event) => {
     }
 });
 
+const rateLimitButton = document.getElementById('rate-limit-button')
+rateLimitButton.addEventListener('click', (event) => {
+  rateLimit.classList.add('zoomout')
+  rateLimit.addEventListener('animationend', function(event) {
+    if (event.animationName === 'zoomOut') {
+      rateLimit.classList.remove('zoomout')
+      rateLimit.style.display = 'none'
+      if (document.getElementById('group-dm').style.display === 'block') {
+        darkOverlay.style.zIndex = '3'
+      } else {
+        event.stopPropagation();
+        document.getElementById('message-input').focus()
+        darkOverlay.style.display = 'none'
+      }
+    }
+  });
+});
 
 
 
@@ -249,12 +286,20 @@ function redirect(chatID, chatDiv) {
   if (membersContainer.style.visibility === 'hidden') {
     membersContainer.style.visibility = "visible"
   }
+  welcomeMessage.style.visibility = 'hidden'
+  
   document.getElementById("no-chat-selected").style.display = "none";
 
   // Remove all children from chats
-  while (messageContainer.firstChild) {
-    messageContainer.removeChild(messageContainer.firstChild);
+  let child = messageContainer.firstElementChild;
+  while (child) {
+    const nextSibling = child.nextElementSibling;
+    if (child.id !== 'welcome-message') {
+      messageContainer.removeChild(child);
+    }
+    child = nextSibling;
   }
+  
   // Remove all children from members
   while (membersList.firstChild) {
     membersList.removeChild(membersList.firstChild);
@@ -303,13 +348,12 @@ async function getChat(endpoint) {
   let loading
   // Function to add loading spinner after a delay
   function addLoadingSpinner() {
-    const loading = document.getElementById('loading')
+    loading = document.getElementById('loading')
     loading.style.display = 'block'
     centerElement(loading, messageContainer)
     window.addEventListener('resize', (event) => {
       centerElement(loading, messageContainer)
     });
-    console.log("Loading spinner added to message container."); 
   }
 
   // Start a timer to add loading spinner after 500 milliseconds
@@ -323,6 +367,7 @@ async function getChat(endpoint) {
         const data = await response.json();
         document.getElementById("chat-name-header").textContent =
           data.chatData.ChatName;
+        document.getElementById("welcome-name").textContent = data.chatData.ChatName
         document
           .getElementById("message-input")
           .setAttribute("placeholder", `Message ${data.chatData.ChatName}...`);
@@ -336,22 +381,12 @@ async function getChat(endpoint) {
           return { username, content: message.Content, userIcon, dateSent };
         });
 
-        const noMessages = document.getElementById('no-messages')
-        if (messagesData.length === 0) {
-          noMessages.style.display = 'block'
-          centerElement(noMessages, messageContainer)
-          window.addEventListener('resize', (event) => {
-            centerElement(noMessages, messageContainer)
-          });
-        } else {
-          noMessages.style.display = 'none'
-        }
 
         // Now that all messages are loaded, make the chat container visible
         if (loading) {
           messageContainer.removeChild(loading)
         }
-        messageContainer.style.visibility = "visible";
+        welcomeMessage.style.visibility = 'visible'
 
         for (const messageData of messagesData) {
           appendRichMessage(
@@ -362,12 +397,11 @@ async function getChat(endpoint) {
             false
           );
         }
+
       } else {
         // If there's an error with the main chat data fetch, make the chat container visible
         if (loading) {
-          messageContainer.removeChild(loading)
         }
-        messageContainer.style.visibility = "visible";
       }
     } catch (error) {
       console.error("Error fetching chat data:", error);
@@ -375,7 +409,6 @@ async function getChat(endpoint) {
       if (loading) {
         messageContainer.removeChild(loading)
       }
-      messageContainer.style.visibility = "visible";
     }
 
     textarea.focus()
@@ -391,7 +424,6 @@ async function getUsers(endpoint) {
   })
   .then(response => response.json())
   .then(data => {
-    console.log(data);
     const members = data.users
     members.forEach(member => {
       const username = member['Username']

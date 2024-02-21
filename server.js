@@ -33,6 +33,7 @@ const compiler = webpack(config);
 const sgMail = require('@sendgrid/mail')
 const fs = require('fs');
 const htmlTemplate = fs.readFileSync('dist/Email/verification.html', 'utf8');
+sgMail.setApiKey('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')
 
 app.use(
   webpackDevMiddleware(compiler, {
@@ -82,10 +83,16 @@ app.use(
 const rateLimitOptions = {
   windowMs: 60 * 1000, // 1 minute
   max: 3, // Max 10 requests per minute per IP address
-  message: "You are creating too many rooms! Try again later...",
-  keyGenerator: function (req) {
-    // Use the client's IP address as the key for rate limiting
-    return req.ip;
+  handler: function (req, res) {
+    res.status(429).send('Too many requests, please try again later.');
+  },
+};
+
+const sendMessageOptions = {
+  windowMs: 15 * 1000, // 1 minute
+  max: 15, // Max 10 requests per minute per IP address
+  handler: function (req, res) {
+    res.status(429).send('Too many requests, please try again later.');
   },
 };
 
@@ -139,14 +146,10 @@ async function executeQuery(query, values) {
 })();
 
 
-sgMail.setApiKey(process.env.SENDGRID_API_KEY)
-// Nodemailer
-
-
-
 
 // Create rate limit middleware for specific routes
 const roomCreationLimiter = rateLimit(rateLimitOptions);
+const sendMessageLimiter = rateLimit(sendMessageOptions);
 
 app.use(express.static("dist"));
 app.use(express.urlencoded({ extended: true }));
@@ -511,6 +514,17 @@ app.post("/login-user", async (req, res) => {
 });
 
 app.get("/profile", (req, res) => {
+  // Simulate profile data (replace with data retrieval logic)
+  const profileData = {
+    id: req.session.userid,
+    email: req.session.email,
+    username: req.session.username,
+    profileIcon: req.session.profileIcon,
+  };
+  res.json(profileData);
+});
+
+app.get("/send-message", sendMessageLimiter, (req, res) => {
   // Simulate profile data (replace with data retrieval logic)
   const profileData = {
     id: req.session.userid,

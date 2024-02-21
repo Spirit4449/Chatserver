@@ -1,40 +1,20 @@
 #group-dm{
     width: 27%;
     min-width: 350px;
-    height: 80%;
-    padding: 10px;
+    height: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     border-radius: 5px;
     background-color: rgba(24, 32, 36, 0.995);
     animation: zoomIn 0.3s ease-in-out;
 }
-@keyframes zoomIn {
-    0% {
-      transform: translate(-50%, -50%) scale(.5);
-      opacity: 0.7;
-    }
-    90% {
-      transform: translate(-50%, -50%) scale(1.02);
-      opacity: 1;
-    }
-    100% {
-        transform: translate(-50%, -50%) scale(1);
-    }
-}
+
 
 #group-dm.zoomout {
     animation: zoomOut 0.1s ease-in-out;
 }
 
-@keyframes zoomOut {
-    0% {
-      transform: translate(-50%, -50%) scale(1);
-      opacity: 1;
-    }
-    100% {
-        transform: translate(-50%, -50%) scale(.7);
-        opacity: 0.5;
-    }
-}
 
 #group-dm h3{
     font-family: 'Nunito', sans-serif;

@@ -4,6 +4,9 @@ const socket = io("/");
 const messageInput = document.getElementById('message-input');
 const messageContainer = document.getElementById('message-container')
 const messageInputContainer = document.getElementById('message-input-container')
+const rateLimit = document.getElementById('rate-limit')
+const rateLimitMessage = document.getElementById('rate-limit-message');
+const darkOverlay = document.getElementById('dark-overlay')
 
 var username
 var profileIcon
@@ -25,6 +28,14 @@ messageInput.addEventListener('keypress', function (event) {
     send();
   }
 });
+
+messageInputContainer.addEventListener('mousedown', function(event) {
+  event.preventDefault();
+  event.stopPropagation();
+  if (messageInput !== document.activeElement) {
+    messageInput.focus();
+  }
+})
 
 const create = document.getElementById('create-new');
 const createMenu = document.getElementById('create');
@@ -57,27 +68,26 @@ create.addEventListener('click', function (event) {
 
 const createGroupDMButton = document.getElementById('create-group-dm')
 createGroupDMButton.addEventListener('click', function (event) {
+  const label = document.getElementById('chat-name-label');
   console.log('button clicked')
   event.stopPropagation();
   const createGroupDM = document.getElementById('group-dm')
   createGroupDM.style.display = 'block'
-  const darkOverlayCheck = document.getElementById('dark-overlay')
-  if (!darkOverlayCheck) {
-    const darkOverlay = document.createElement('div')
-    darkOverlay.classList.add('dark-overlay')
-    darkOverlay.setAttribute('id', 'dark-overlay')
-    createGroupDM.style.left = '50%';
-    createGroupDM.style.top = "50%";
-    createGroupDM.style.transform = "translate(-50%, -50%)";
-    document.body.appendChild(darkOverlay)
-  }
+  darkOverlay.style.display = 'block'
+  document.getElementById('chat-name').focus()
   closePopup(document.getElementById("create"));
+  label.style.color = '#cdcdcd'
+  label.textContent = 'Chat Name'
   const closeGroupDM = document.getElementById('close-groupdm')
   closeGroupDM.addEventListener('click', function (event) {
     closeSetup(createGroupDM);
+    label.style.color = '#cdcdcd'
+    label.textContent = 'Chat Name'
   })
   window.addEventListener('mousedown', function(event) {
-    if (event.target !== createGroupDM && !createGroupDM.contains(event.target) && createGroupDM.style.display === 'block') {
+    const groupDMStyles = window.getComputedStyle(createGroupDM)
+    const rateLimitStyles = window.getComputedStyle(rateLimit)
+    if (event.target !== createGroupDM && !createGroupDM.contains(event.target) && groupDMStyles.display === 'block' && rateLimitStyles.display === 'none') {
       closeSetup(createGroupDM);
     }
   });
@@ -101,16 +111,13 @@ function closeSetup(popup) {
     if (event.animationName === 'zoomOut') {
       popup.classList.remove('zoomout')
       popup.style.display = 'none'
-      popup.style.transform = "translate(50%, 50%)";
     }
 });
-  const darkOverlay = document.getElementById('dark-overlay')
-  if (darkOverlay) {
-    darkOverlay.remove()
-  }
+  darkOverlay.style.display = 'none'
 }
 
 function closePopup(popup) {
+  document.getElementById('chat-name').value = ''
   popup.style.display = "none";
   popup.classList.remove('animate-left');
   var create = document.getElementById('create-new')
@@ -119,10 +126,16 @@ function closePopup(popup) {
 }
 
 function send() {
-  fetch('/profile')
+  fetch('/send-message')
     .then(response => {
       if (response.ok) {
         return response.json();
+      } else if (response.status === 429) {
+          rateLimitMessage.textContent = 'You are sending too many messages. Try again in a few minutes'
+          rateLimit.style.display = 'block'
+          darkOverlay.style.display = 'block'
+          messageInput.blur()
+          throw new Error("Sending too many messages");
       }
     })
     .then(data => {
@@ -181,10 +194,6 @@ function appendMessage(message, smooth=true) {
   }
   
 
-  const noMessage = document.getElementById('no-messages')
-  if (noMessage.style.display === 'block') {
-    noMessage.style.display = 'none'
-  }
 }
 
 function appendRichMessage(name, messagetext, icon, timestamp, smooth=true) {
@@ -236,11 +245,6 @@ function appendRichMessage(name, messagetext, icon, timestamp, smooth=true) {
     messageContainer.scrollTop = messageContainer.scrollHeight;
   }
   
-
-  const noMessage = document.getElementById('no-messages')
-  if (noMessage.style.display === 'block') {
-    noMessage.style.display = 'none'
-  }
 }
 
 function formatChatDate(timestamp) {

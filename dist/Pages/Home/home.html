@@ -75,6 +75,11 @@
                     </div>
                     <div class="messages" id="messages">
                         <div class="message-container custom-scrollbar" id="message-container">
+                            <div id="welcome-message">
+                                <h2 style="display: inline">Welcome to </h2>
+                                <h2 style="display: inline" id="welcome-name"></h2>
+                                <p id="start-chat">This is the start of the chat</p>
+                            </div>
                         </div>
                         <div class="input" id="message-input-container">
                             <span class="material-symbols-rounded" id="attatchment">attach_file</span>
@@ -97,8 +102,8 @@
                     <img id="no-chat-selected-img" src="/assets/nochatselected.png" alt="No chat">
                     <p id='no-chat-selected-text'>Messages will show up here...</p>
                 </div>
-                <p id="no-messages">No messages here yet. Be the first to send one!</p>
                 <img src="/assets/loading.svg" id='loading' alt="loading">
+                <div class="dark-overlay" id="dark-overlay"></div>
             </div>
         </div>
     </div>
@@ -137,8 +142,8 @@
                     <img src="/assets/chatadd.svg">
                 </div>
                 <div class="create-text">
-                    <h5>Public Chat</h5>
-                    <p>Create a public chat that anyone can join with invite link</p>
+                    <h5>Class Chat</h5>
+                    <p>Create a chat with a course name that anyone can join with invite link</p>
                 </div>
             </div>
             <div>
@@ -147,15 +152,27 @@
         </div>
       </div>
       <div class="popup" id="group-dm">
-        <span class="material-symbols-rounded" id="close-groupdm">close</span>
-        <h3>New Group DM</h3>
-        <p class="popup-text">Connect with multiple friends and chat privately</p>
-        <label for="image" class="label">Set Icon</label>
-        <input type="file" id="imageUpload" name="image" accept="image/*">
-        <label for="chat-name" class="label">Chat Name</label>
-        <input type="text" id="chat-name" name="chat-name" class="input-text" placeholder="Your chat" maxlength="50" autocomplete="off">
+        <div class="popup-context">
+            <span class="material-symbols-rounded" id="close-groupdm">close</span>
+            <h3>New Group DM</h3>
+            <p class="popup-text">Connect with multiple friends and chat privately</p>
+            <label for="image" class="label">Set Icon</label>
+            <input type="file" id="imageUpload" name="image" accept="image/*">
+            <label for="chat-name" class="label" id="chat-name-label">Chat Name</label>
+            <input type="text" id="chat-name" name="chat-name" class="input-text" placeholder="Your chat" maxlength="50" autocomplete="off">
+        </div>
         <div class="popup-bottom">
             <button type="submit" class="button popup-option" id="groupdm-create">Create</button>
+        </div>
+      </div>
+
+      <div class="popup" id="rate-limit">
+        <div class="popup-context">
+            <h2>Slow down...</h2>
+            <p id='rate-limit-message' class="popup-text">You are creating too many servers. Try again in a few minutes</p>
+        </div>
+        <div class="popup-bottom" id="rate-limit-bottom">
+            <input class="button" style="padding: 15px 12px; font-size: 15px;" type="button" value="OK" id="rate-limit-button">
         </div>
       </div>
 </body>
