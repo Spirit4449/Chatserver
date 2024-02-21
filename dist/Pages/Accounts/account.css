@@ -1,5 +1,5 @@
 body {
-  font-family: 'Work Sans', sans-serif;
+  font-family: "Work Sans", sans-serif;
   color: #b5bac1;
   /* background-image: linear-gradient(#7DB9D8, #1E9FE3, #5865f2); */
   background-image: url("/assets/chatbackground.png");
@@ -22,10 +22,9 @@ body {
   text-align: center;
   position: relative;
   overflow: hidden;
-  animation: floatDown .7s cubic-bezier(0.4, 1.5, 0.2, 1) 0s forwards;
-  transition: height .5s ease;
+  animation: floatDown 0.7s cubic-bezier(0.4, 1.5, 0.2, 1) 0s forwards;
+  transition: height 0.5s ease;
 }
-
 
 @keyframes floatDown {
   0% {
@@ -64,11 +63,9 @@ body {
   pointer-events: none;
 }
 
-
-
 h1 {
   margin-top: 0;
-  font-family: 'Nunito', sans-serif;
+  font-family: "Nunito", sans-serif;
   font-weight: 600;
   color: white;
 }
@@ -79,7 +76,7 @@ label {
   margin-bottom: 5px;
 }
 
-input{
+input {
   width: 100%;
   padding: 10px 7px;
   border-radius: 3px;
@@ -87,17 +84,16 @@ input{
   border: none;
   color: white;
   background-color: #1e1f22;
-  font-family: 'Work Sans', sans-serif;
+  font-family: "Work Sans", sans-serif;
   box-sizing: border-box;
   cursor: text;
 }
 
-input[type='text']:focus,
-input[type='password']:focus,
-input[type='number']:focus {
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="number"]:focus {
   outline: 2px solid #5865f2;
 }
-
 
 button {
   width: 100%;
@@ -110,7 +106,7 @@ button {
   margin-top: 10px;
   margin-bottom: 10px;
   transition: background-color 0.1s;
-  font-family: 'Nunito', sans-serif;
+  font-family: "Nunito", sans-serif;
   font-size: 12pt;
 }
 
@@ -118,7 +114,7 @@ button:hover {
   background-color: #4752c4;
 }
 button:focus {
-  outline: 2px solid #6570F1;
+  outline: 2px solid #6570f1;
   outline-offset: 3px;
 }
 
@@ -128,7 +124,6 @@ a {
   font-size: 10pt;
   cursor: pointer;
 }
-
 
 label {
   display: inline;
@@ -140,7 +135,6 @@ label {
   /* font-style: italic; */
   font-size: 10pt;
 }
-
 
 span {
   user-select: none;

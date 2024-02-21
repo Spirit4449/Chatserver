@@ -1,6 +1,6 @@
 // Globals
-const key = '1837key';
-const mcConsoleAccess = ['100000'] //Nischay, ..
+const key = "1837key";
+const mcConsoleAccess = ["100000"]; //Nischay, ..
 
 // Express
 const express = require("express");
@@ -30,14 +30,16 @@ const config = require("./webpack.config.js");
 const compiler = webpack(config);
 
 // Mail
-const sgMail = require('@sendgrid/mail')
-const fs = require('fs');
-const htmlTemplate = fs.readFileSync('dist/Email/verification.html', 'utf8');
-sgMail.setApiKey('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')
+const sgMail = require("@sendgrid/mail");
+const fs = require("fs");
+const htmlTemplate = fs.readFileSync("dist/Email/verification.html", "utf8");
+sgMail.setApiKey(
+  "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"
+);
 
 app.use(
   webpackDevMiddleware(compiler, {
-    publicPath: '/Bundles',
+    publicPath: "/Bundles",
   })
 );
 
@@ -84,7 +86,7 @@ const rateLimitOptions = {
   windowMs: 60 * 1000, // 1 minute
   max: 3, // Max 10 requests per minute per IP address
   handler: function (req, res) {
-    res.status(429).send('Too many requests, please try again later.');
+    res.status(429).send("Too many requests, please try again later.");
   },
 };
 
@@ -92,7 +94,7 @@ const sendMessageOptions = {
   windowMs: 15 * 1000, // 1 minute
   max: 15, // Max 10 requests per minute per IP address
   handler: function (req, res) {
-    res.status(429).send('Too many requests, please try again later.');
+    res.status(429).send("Too many requests, please try again later.");
   },
 };
 
@@ -145,8 +147,6 @@ async function executeQuery(query, values) {
   }
 })();
 
-
-
 // Create rate limit middleware for specific routes
 const roomCreationLimiter = rateLimit(rateLimitOptions);
 const sendMessageLimiter = rateLimit(sendMessageOptions);
@@ -157,12 +157,13 @@ app.use(express.urlencoded({ extended: true }));
 const users = {};
 const rooms = {};
 
-
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "dist", "Pages", "Index", "index.html"));
 });
 app.get("/signup", (req, res) => {
-  res.sendFile(path.join(__dirname, "dist", "Pages", "Accounts", "signup.html"));
+  res.sendFile(
+    path.join(__dirname, "dist", "Pages", "Accounts", "signup.html")
+  );
 });
 app.get("/login", (req, res) => {
   res.sendFile(path.join(__dirname, "dist", "Pages", "Accounts", "login.html"));
@@ -267,7 +268,7 @@ app.get("/chat/:chatid", async (req, res) => {
           `/Pages/Home/home.html?chatID=${encodeURIComponent(encryptedChatID)}`
         );
       } else {
-        res.redirect(referringPage); 
+        res.redirect(referringPage);
       }
     } else {
       res.redirect(referringPage);
@@ -317,7 +318,7 @@ app.get("/getchat/:id", async (req, res) => {
   }
 });
 
-app.post('/get-users/:id', async (req, res) => {
+app.post("/get-users/:id", async (req, res) => {
   const chatID = req.params.id;
 
   const conn = await pool.getConnection();
@@ -331,19 +332,17 @@ app.post('/get-users/:id', async (req, res) => {
   `;
 
   try {
-      // Execute the query
-      const userResults = await conn.query(userQuery, [chatID]);
+    // Execute the query
+    const userResults = await conn.query(userQuery, [chatID]);
 
-      // Send the results as JSON response
-      res.status(200).json({ success: true, users: userResults });
-      conn.release()
+    // Send the results as JSON response
+    res.status(200).json({ success: true, users: userResults });
+    conn.release();
   } catch (error) {
-      console.error("Error retrieving users:", error);
-      res.status(500).json({ success: false, error: "Error retrieving users" });
+    console.error("Error retrieving users:", error);
+    res.status(500).json({ success: false, error: "Error retrieving users" });
   }
 });
-
-
 
 app.post("/check-email", async (req, res) => {
   const encryptedEmail = req.body.email;
@@ -385,7 +384,9 @@ app.post("/register-user", async (req, res) => {
   );
 
   if (email.length > 255 || username.length > 20 || password.length > 255) {
-    return res.status(500).json({ message: 'One or more fields has too many characters' })
+    return res
+      .status(500)
+      .json({ message: "One or more fields has too many characters" });
   }
 
   try {
@@ -423,13 +424,11 @@ app.post("/register-user", async (req, res) => {
       req.session.email = email;
       req.session.profileIcon = profileIcon;
 
-      return res
-        .status(200)
-        .json({
-          message: "Inserted user data",
-          userID: userID,
-          accessCode: generateRandomString(29),
-        });
+      return res.status(200).json({
+        message: "Inserted user data",
+        userID: userID,
+        accessCode: generateRandomString(29),
+      });
     } else {
       return res.status(500).json({ error: "Error inserting user data" });
     }
@@ -451,7 +450,9 @@ app.post("/login-user", async (req, res) => {
   );
 
   if (email.length > 255 || password.length > 255) {
-    return res.status(500).json({ message: 'One or more fields has too many characters' })
+    return res
+      .status(500)
+      .json({ message: "One or more fields has too many characters" });
   }
 
   try {
@@ -535,29 +536,28 @@ app.get("/send-message", sendMessageLimiter, (req, res) => {
   res.json(profileData);
 });
 
-app.post('/send-code', async (req, res) => {
+app.post("/send-code", async (req, res) => {
   const to = req.body.email;
-  const code = generateVerificationCode()
+  const code = generateVerificationCode();
 
-  const htmlContent = htmlTemplate.replace('${code}', code);
+  const htmlContent = htmlTemplate.replace("${code}", code);
 
   const msg = {
     to: to, // Change to your recipient
-    from: 'noreply@classchats.net', // Change to your verified sender
-    subject: 'Verification code for Class Chats',
+    from: "noreply@classchats.net", // Change to your verified sender
+    subject: "Verification code for Class Chats",
     html: htmlContent,
-  }
+  };
   sgMail
     .send(msg)
     .then(() => {
-      console.log('Email sent')
-      res.status(200).json({ message: 'Email sent successfully', code });
+      console.log("Email sent");
+      res.status(200).json({ message: "Email sent successfully", code });
     })
     .catch((error) => {
-      res.status(500).json({ error: 'Failed to send email' });
-    })
+      res.status(500).json({ error: "Failed to send email" });
+    });
 });
-
 
 io.on("connection", (socket) => {
   socket.on("new-user", (name) => {

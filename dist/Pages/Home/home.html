@@ -1,180 +1,260 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Home</title>
-    <link rel="icon" type="image/png" href="/assets/icon.svg">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&family=Open+Sans:wght@400;500;600;700&family=Work+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="icon" type="image/png" href="/assets/icon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&family=Open+Sans:wght@400;500;600;700&family=Work+Sans:wght@400;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+    />
     <script src="/socket.io/socket.io.js"></script>
-    <link rel="stylesheet" href="/Pages/Home/home.css">
-    <link rel="stylesheet" href="/Pages/Home/create.css">
-    <link rel="stylesheet" href="/Pages/Home/groupdm.css">
-    <link rel="stylesheet" href="/Pages/Home/popup.css">
+    <link rel="stylesheet" href="/Pages/Home/home.css" />
+    <link rel="stylesheet" href="/Pages/Home/popup.css" />
+    <link rel="stylesheet" href="/Pages/Home/side.css" />
+    <link rel="stylesheet" href="/Pages/Home/container.css" />
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
-</head>
-<body>
+  </head>
+  <body>
     <div class="container" id="container">
-        <div class="navbar">
-            <div id="branding">
-                <img src="/assets/icon.svg" alt="Icon" style="height: 30px; margin-right: 5px">
-                <h3>Class Chats</h3>
-            </div>
-            <input type="text" class="search" placeholder="Search">
-            <div class="navactions">
-                <button id="disguise">Disguise</button>
-                <button id="panic">Panic</button>
-            </div>
+      <div class="navbar">
+        <div id="branding">
+          <img
+            src="/assets/icon.svg"
+            alt="Icon"
+            style="height: 30px; margin-right: 5px"
+          />
+          <h3>Class Chats</h3>
         </div>
-        <div class="body">
-            <div class="sidebar" id="sidebar">
-                <div class="panels">
-                    <div class="panel">
-                        <span class="material-symbols-rounded">home</span>
-                        <label for="span">Home</label>
-                    </div>
-                    <div class="panel">
-                        <span class="material-symbols-rounded">group</span>
-                        <label for="span">Friends</label>
-                    </div>
-                    <div class="panel">
-                        <span class="material-symbols-rounded">explore</span>
-                        <label for="span">Explore</label>
-                    </div>
-                </div>
-                <div class="actions">
-                    <span class="material-symbols-rounded" id="create-new">add</span>
-                    <img src="/assets/Profile Icons/blueProfileIcon.png" alt="Profile Picture" id="profile-picture">
-                </div>
-            </div>
-            <div class="content" id="content">
-                <div class="left-content">
-                    <div class="header">
-                        <h3>Chats</h3>
-                        <div style="display: flex;">
-                            <span id="icon" class="material-symbols-rounded">filter_list</span>
-                            <span id="icon" class="material-symbols-rounded">done_all</span>
-                        </div>
-                    </div>
-                    <div class="chats custom-scrollbar" id="chat-container">
-                    </div>
-                </div>
-                <div class="chat-display" id="chat-display">
-                    <div class="header" id="chat-header">
-                        <div class="header-dropdown">
-                            <h3 id="chat-name-header"></h3>
-                            <span class="material-symbols-rounded" id="server-options">expand_more</span>
-                        </div>
-                        <span id="person" class="material-symbols-rounded toggled">groups</span>
-                    </div>
-                    <div class="messages" id="messages">
-                        <div class="message-container custom-scrollbar" id="message-container">
-                            <div id="welcome-message">
-                                <h2 style="display: inline">Welcome to </h2>
-                                <h2 style="display: inline" id="welcome-name"></h2>
-                                <p id="start-chat">This is the start of the chat</p>
-                            </div>
-                        </div>
-                        <div class="input" id="message-input-container">
-                            <span class="material-symbols-rounded" id="attatchment">attach_file</span>
-                            <textarea type="text" class="message-input custom-scrollbar" id="message-input" placeholder="" autocomplete="off" maxlength="4000" rows="1" autofocus></textarea>
-                            <span class="material-symbols-rounded" id="attatchment">sentiment_satisfied</span>
-                            <span class="material-symbols-rounded" id="attatchment">gif_box</span>
-                            <span class="material-symbols-rounded" id="attatchment">code_blocks</span>
-                            <img src="/assets/send.svg" id="send" width="20xp" height="20px"></img>
-                        </div>
-                    </div>
-                </div>
-                <div class="members" id="members">
-                    <div class="header" id="members-header">
-                        <h3 id="members-header">Members</h3>
-                    </div>
-                    <div id="members-list" class="custom-scrollbar">
-                    </div>
-                </div>
-                <div id="no-chat-selected">
-                    <img id="no-chat-selected-img" src="/assets/nochatselected.png" alt="No chat">
-                    <p id='no-chat-selected-text'>Messages will show up here...</p>
-                </div>
-                <img src="/assets/loading.svg" id='loading' alt="loading">
-                <div class="dark-overlay" id="dark-overlay"></div>
-            </div>
+        <input type="text" class="search" placeholder="Search" />
+        <div class="navactions">
+          <button id="disguise">Disguise</button>
+          <button id="panic">Panic</button>
         </div>
+      </div>
+      <div class="body">
+        <div class="sidebar" id="sidebar">
+          <div class="panels">
+            <div class="panel">
+              <span class="material-symbols-rounded">home</span>
+              <label for="span">Home</label>
+            </div>
+            <div class="panel">
+              <span class="material-symbols-rounded">group</span>
+              <label for="span">Friends</label>
+            </div>
+            <div class="panel">
+              <span class="material-symbols-rounded">explore</span>
+              <label for="span">Explore</label>
+            </div>
+          </div>
+          <div class="actions">
+            <span class="material-symbols-rounded" id="create-new">add</span>
+            <img
+              src="/assets/Profile Icons/blueProfileIcon.png"
+              alt="Profile Picture"
+              id="profile-picture"
+            />
+          </div>
+        </div>
+        <div class="content" id="content">
+          <div class="left-content">
+            <div class="header">
+              <h3>Chats</h3>
+              <div style="display: flex">
+                <span id="icon" class="material-symbols-rounded"
+                  >filter_list</span
+                >
+                <span id="icon" class="material-symbols-rounded">done_all</span>
+              </div>
+            </div>
+            <div class="chats custom-scrollbar" id="chat-container"></div>
+          </div>
+          <div class="chat-display" id="chat-display">
+            <div class="header" id="chat-header">
+              <div class="header-dropdown">
+                <h3 id="chat-name-header"></h3>
+                <span class="material-symbols-rounded" id="server-options"
+                  >expand_more</span
+                >
+              </div>
+              <span id="person" class="material-symbols-rounded toggled"
+                >groups</span
+              >
+            </div>
+            <div class="messages" id="messages">
+              <div
+                class="message-container custom-scrollbar"
+                id="message-container"
+              >
+                <div id="welcome-message">
+                  <h2 style="display: inline">Welcome to</h2>
+                  <h2 style="display: inline" id="welcome-name"></h2>
+                  <p id="start-chat">This is the start of the chat</p>
+                </div>
+              </div>
+              <div class="input" id="message-input-container">
+                <span class="material-symbols-rounded" id="attatchment"
+                  >attach_file</span
+                >
+                <textarea
+                  type="text"
+                  class="message-input custom-scrollbar"
+                  id="message-input"
+                  placeholder=""
+                  autocomplete="off"
+                  maxlength="4000"
+                  rows="1"
+                  autofocus
+                ></textarea>
+                <span class="material-symbols-rounded" id="attatchment"
+                  >sentiment_satisfied</span
+                >
+                <span class="material-symbols-rounded" id="attatchment"
+                  >gif_box</span
+                >
+                <span class="material-symbols-rounded" id="attatchment"
+                  >code_blocks</span
+                >
+                <img
+                  src="/assets/send.svg"
+                  id="send"
+                  width="20xp"
+                  height="20px"
+                />
+              </div>
+            </div>
+          </div>
+          <div class="members" id="members">
+            <div class="header" id="members-header">
+              <h3 id="members-header">Members</h3>
+            </div>
+            <div id="members-list" class="custom-scrollbar"></div>
+          </div>
+          <div id="no-chat-selected">
+            <img id="no-chat-selected-img" src="/assets/nochatselected.png" alt="No chat">
+            <p id='no-chat-selected-text'>Messages will show up here...</p>
+          </div>
+          <img src="/assets/loading.svg" id="loading" alt="loading" />
+          <div class="dark-overlay" id="dark-overlay"></div>
+        </div>
+      </div>
     </div>
     <div id="create" class="popup">
-        <h4 style="margin-bottom: 8px; margin-left: 15px; margin-top: 5px;">New</h4>
-        <div id="create-options">
-            <div class="create-option">
-                <div class="create-img-container" style="background-color: rgb(88, 97, 79);">
-                    <img src="/assets/joinadd.svg">
-                </div>
-                <div class="create-text">
-                    <h5>Join</h5>
-                    <p>Join a group by invite link</p>
-                </div>
-            </div>
-            <div class="create-option">
-                <div class="create-img-container" style="background-color: #4d61ab;">
-                    <img src="/assets/personadd.svg">
-                </div>
-                <div class="create-text">
-                    <h5>Direct Message</h5>
-                    <p>Directly message one of your friends</p>
-                </div>
-            </div>
-            <div class="create-option" id="create-group-dm">
-                <div class="create-img-container" style="background-color: rgb(124, 73, 73);">
-                    <img src="/assets/groupadd.svg">
-                </div>
-                <div class="create-text">
-                    <h5>Group DM</h5>
-                    <p>Create a group with multiple freinds</p>
-                </div>
-            </div>
-            <div class="create-option">
-                <div class="create-img-container" style="background-color: #000000;">
-                    <img src="/assets/chatadd.svg">
-                </div>
-                <div class="create-text">
-                    <h5>Class Chat</h5>
-                    <p>Create a chat with a course name that anyone can join with invite link</p>
-                </div>
-            </div>
-            <div>
-    
-            </div>
+      <h4 style="margin-bottom: 8px; margin-left: 15px; margin-top: 5px">
+        New
+      </h4>
+      <div id="create-options">
+        <div class="create-option">
+          <div
+            class="create-img-container"
+            style="background-color: rgb(88, 97, 79)"
+          >
+            <img src="/assets/joinadd.svg" />
+          </div>
+          <div class="create-text">
+            <h5>Join</h5>
+            <p>Join a group by invite link</p>
+          </div>
         </div>
+        <div class="create-option">
+          <div class="create-img-container" style="background-color: #4d61ab">
+            <img src="/assets/personadd.svg" />
+          </div>
+          <div class="create-text">
+            <h5>Direct Message</h5>
+            <p>Directly message one of your friends</p>
+          </div>
+        </div>
+        <div class="create-option" id="create-group-dm">
+          <div
+            class="create-img-container"
+            style="background-color: rgb(124, 73, 73)"
+          >
+            <img src="/assets/groupadd.svg" />
+          </div>
+          <div class="create-text">
+            <h5>Group DM</h5>
+            <p>Create a group with multiple freinds</p>
+          </div>
+        </div>
+        <div class="create-option">
+          <div class="create-img-container" style="background-color: #000000">
+            <img src="/assets/chatadd.svg" />
+          </div>
+          <div class="create-text">
+            <h5>Class Chat</h5>
+            <p>
+              Create a chat with a course name that anyone can join with invite
+              link
+            </p>
+          </div>
+        </div>
+        <div></div>
       </div>
-      <div class="popup" id="group-dm">
-        <div class="popup-context">
-            <span class="material-symbols-rounded" id="close-groupdm">close</span>
-            <h3>New Group DM</h3>
-            <p class="popup-text">Connect with multiple friends and chat privately</p>
-            <label for="image" class="label">Set Icon</label>
-            <input type="file" id="imageUpload" name="image" accept="image/*">
-            <label for="chat-name" class="label" id="chat-name-label">Chat Name</label>
-            <input type="text" id="chat-name" name="chat-name" class="input-text" placeholder="Your chat" maxlength="50" autocomplete="off">
-        </div>
-        <div class="popup-bottom">
-            <button type="submit" class="button popup-option" id="groupdm-create">Create</button>
-        </div>
+    </div>
+    <div class="popup" id="group-dm">
+      <div class="popup-context">
+        <span class="material-symbols-rounded" id="close-groupdm">close</span>
+        <h3>New Group DM</h3>
+        <p class="popup-text">
+          Connect with multiple friends and chat privately
+        </p>
+        <label for="image" class="label">Set Icon</label>
+        <input type="file" id="imageUpload" name="image" accept="image/*" />
+        <label for="chat-name" class="label" id="chat-name-label"
+          >Chat Name</label
+        >
+        <input
+          type="text"
+          id="chat-name"
+          name="chat-name"
+          class="input-text"
+          placeholder="Your chat"
+          maxlength="50"
+          autocomplete="off"
+        />
       </div>
+      <div class="popup-bottom">
+        <button type="submit" class="button popup-option" id="groupdm-create">
+          Create
+        </button>
+      </div>
+    </div>
 
-      <div class="popup" id="rate-limit">
-        <div class="popup-context">
-            <h2>Slow down...</h2>
-            <p id='rate-limit-message' class="popup-text">You are creating too many servers. Try again in a few minutes</p>
-        </div>
-        <div class="popup-bottom" id="rate-limit-bottom">
-            <input class="button" style="padding: 15px 12px; font-size: 15px;" type="button" value="OK" id="rate-limit-button">
-        </div>
+    <div class="popup" id="rate-limit">
+      <div class="popup-context">
+        <h2>Slow down...</h2>
+        <p id="rate-limit-message" class="popup-text">
+          You are creating too many servers. Try again in a few minutes
+        </p>
       </div>
-</body>
-<script src="/Bundles/script.bundle.js"></script>
+      <div class="popup-bottom" id="rate-limit-bottom">
+        <input
+          class="button"
+          style="padding: 15px 12px; font-size: 15px"
+          type="button"
+          value="OK"
+          id="rate-limit-button"
+        />
+      </div>
+    </div>
+  </body>
+  <script src="/Bundles/home.bundle.js"></script>
 </html>

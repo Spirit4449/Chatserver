@@ -13,7 +13,7 @@ const header = document.getElementById("header");
 const smallText = document.getElementById("small-text");
 const verificationForm = document.getElementById("verification-form");
 const signupGroup = document.querySelectorAll(".form-group");
-const passwordToggle = document.getElementById('password-toggle')
+const passwordToggle = document.getElementById("password-toggle");
 
 signupForm.addEventListener("submit", async function (event) {
   event.preventDefault();
@@ -71,7 +71,12 @@ signupForm.addEventListener("submit", async function (event) {
           emailError.textContent = "- Email already in use";
         } else {
           // send email here
-          animateContainer(emailInput.value, encryptedEmail, encryptedUsername, encryptedPassword);
+          animateContainer(
+            emailInput.value,
+            encryptedEmail,
+            encryptedUsername,
+            encryptedPassword
+          );
         }
       })
       .catch((error) => {
@@ -104,7 +109,7 @@ async function sendVerificationCodeEmail(email) {
   }
 }
 
-passwordToggle.addEventListener('click', (event) => {
+passwordToggle.addEventListener("click", (event) => {
   if (passwordInput.type === "password") {
     passwordInput.type = "text";
     passwordToggle.innerHTML = "visibility";
@@ -113,7 +118,6 @@ passwordToggle.addEventListener('click', (event) => {
     passwordToggle.innerHTML = "visibility_off";
   }
 });
-
 
 function animateContainer(email, encryptedEmail, username, password) {
   console.log("animating");
@@ -145,10 +149,10 @@ function addVerificationForm(email, encryptedEmail, username, password) {
   instructions.style.textAlign = "left";
   instructions.style.fontSize = "15px";
 
-  const codeError = document.createElement('p')
-  codeError.style.color = '#fa777c'
-  codeError.style.textAlign = "left"
-  codeError.style.margin = '0'
+  const codeError = document.createElement("p");
+  codeError.style.color = "#fa777c";
+  codeError.style.textAlign = "left";
+  codeError.style.margin = "0";
   codeError.style.fontSize = "15px";
 
   const verificationGroup = document.createElement("div");
@@ -159,7 +163,7 @@ function addVerificationForm(email, encryptedEmail, username, password) {
   verificationInput.setAttribute("id", "verification-code");
   verificationInput.setAttribute("name", "verification-code");
   verificationInput.setAttribute("placeholder", "Enter your verification code");
-  verificationInput.style.marginTop = '0'
+  verificationInput.style.marginTop = "0";
 
   const verifyButton = document.createElement("button");
   verifyButton.setAttribute("type", "submit");
@@ -169,28 +173,27 @@ function addVerificationForm(email, encryptedEmail, username, password) {
 
   (async () => {
     const code = await sendVerificationCodeEmail(email);
-    console.log(code)
+    console.log(code);
     function registerClick() {
       if (Number(verificationInput.value) === code) {
         register(encryptedEmail, username, password, codeError);
       } else {
-        codeError.textContent = 'Incorrect code'
+        codeError.textContent = "Incorrect code";
       }
     }
     verifyButton.onclick = registerClick;
-    verificationInput.addEventListener('input', function(event) {
-      if (codeError.textContent !== '') {
-        codeError.textContent = ''
+    verificationInput.addEventListener("input", function (event) {
+      if (codeError.textContent !== "") {
+        codeError.textContent = "";
       }
-    })
+    });
   })();
-
 
   verificationGroup.appendChild(verificationInput);
   verificationGroup.appendChild(verifyButton);
 
   verification.appendChild(instructions);
-  verification.appendChild(codeError)
+  verification.appendChild(codeError);
   verification.appendChild(verificationGroup);
   verification.setAttribute("id", "verification");
   verification.setAttribute("class", "verification-group");
@@ -231,8 +234,8 @@ async function register(email, username, password, codeError) {
       console.log("Registration successful");
       window.location.href = "/home";
     } else {
-        console.error("Registration failed. Status:", response.status);
-        codeError.textContent = data.message
+      console.error("Registration failed. Status:", response.status);
+      codeError.textContent = data.message;
     }
   } catch (error) {
     console.error("Request failed:", error);

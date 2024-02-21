@@ -6,7 +6,7 @@ const passwordInput = document.getElementById("password");
 const emailError = document.getElementById("email-error");
 const passwordError = document.getElementById("password-error");
 const container = document.querySelector(".container"); // Note the correct selector for the container element
-const passwordToggle = document.getElementById('password-toggle')
+const passwordToggle = document.getElementById("password-toggle");
 
 const referrer = document.referrer;
 
@@ -74,8 +74,8 @@ loginForm.addEventListener("submit", async function (event) {
   }
 });
 
-passwordToggle.addEventListener('click', (event) => {
-  console.log('hello3')
+passwordToggle.addEventListener("click", (event) => {
+  console.log("hello3");
   if (passwordInput.type === "password") {
     passwordInput.type = "text";
     passwordToggle.innerHTML = "visibility";
@@ -84,7 +84,6 @@ passwordToggle.addEventListener('click', (event) => {
     passwordToggle.innerHTML = "visibility_off";
   }
 });
-
 
 function createCookie(name, value, daysToExpire) {
   var expires = "";
