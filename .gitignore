@@ -1,1 +1,15 @@
-node_modules
+node_modules/
+node_modules/.package-lock.json
+node_modules/mysql2/package.json
+node_modules/mysql2/README.md
+node_modules/mysql2/lib/connection_config.js
+node_modules/mysql2/lib/connection.js
+node_modules/mysql2/lib/pool.js
+node_modules/mysql2/lib/commands/client_handshake.js
+node_modules/mysql2/lib/commands/query.js
+node_modules/mysql2/lib/parsers/binary_parser.js
+node_modules/mysql2/lib/parsers/string.js
+node_modules/mysql2/typings/mysql/lib/Connection.d.ts
+node_modules/mysql2/typings/mysql/lib/Pool.d.ts
+node_modules/mysql2/typings/mysql/lib/protocol/packets/FieldPacket.d.ts
+node_modules/mysql2/typings/mysql/lib/protocol/sequences/Query.d.ts
