@@ -1,7 +1,3 @@
-// Globals
-const key = "1837key";
-const mcConsoleAccess = ["100000"]; //Nischay, ..
-
 // Express
 const express = require("express");
 // HTTP
@@ -30,11 +26,12 @@ const config = require("./webpack.config.js");
 const compiler = webpack(config);
 
 // Mail
+require('dotenv').config();
 const sgMail = require("@sendgrid/mail");
 const fs = require("fs");
 const htmlTemplate = fs.readFileSync("dist/Email/verification.html", "utf8");
 sgMail.setApiKey(
-  "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"
+  process.env.SEND_GRID
 );
 
 app.use(
@@ -45,13 +42,20 @@ app.use(
 
 app.use(webpackHotMiddleware(compiler));
 
+app.set('trust proxy', 1);
+
+
+// Globals
+const key = process.env.KEY;
+const mcConsoleAccess = ["100000"]; //Nischay, ..
+
 // Pool
 const pool = mariadb.createPool({
   socketPath: "/run/mysqld/mysqld.sock",
   host: "localhost",
-  user: "nisch",
-  password: "Akshardhamsql",
-  database: "classchat",
+  user: process.env.DATABASE_USER,
+  password: process.env.DATABASE_PASS,
+  database: process.env.DATABASE_NAME,
   connectionLimit: 10,
 });
 
@@ -70,7 +74,7 @@ app.use(require("cookie-parser")());
 app.use(
   session({
     name: "ClassChat",
-    secret: "Akshardhamsecuresessionstorage183750-0508",
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     //store: sessionStore,

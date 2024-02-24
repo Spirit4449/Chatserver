@@ -1,4 +1,5 @@
-import { key } from "../globals";
+const { KEY } = process.env
+
 
 const signupForm = document.getElementById("signup-form");
 const emailInput = document.getElementById("email");
@@ -46,15 +47,15 @@ signupForm.addEventListener("submit", async function (event) {
   ) {
     const encryptedEmail = CryptoJS.AES.encrypt(
       emailInput.value,
-      key
+      KEY
     ).toString();
     const encryptedUsername = CryptoJS.AES.encrypt(
       usernameInput.value,
-      key
+      KEY
     ).toString();
     const encryptedPassword = CryptoJS.AES.encrypt(
       passwordInput.value,
-      key
+      KEY
     ).toString();
     fetch("/check-email", {
       method: "POST",
@@ -120,7 +121,6 @@ passwordToggle.addEventListener("click", (event) => {
 });
 
 function animateContainer(email, encryptedEmail, username, password) {
-  console.log("animating");
   const currentHeight = container.clientHeight;
   let transitionsEnded = 0;
   signupGroup.forEach((signupElement) => {
@@ -136,7 +136,6 @@ function animateContainer(email, encryptedEmail, username, password) {
 }
 
 function addVerificationForm(email, encryptedEmail, username, password) {
-  console.log("adding verification form");
   const verification = document.createElement("div");
   const instructions = document.createElement("p");
   instructions.textContent = `Enter the 6-digit verification code sent to `;
@@ -173,7 +172,6 @@ function addVerificationForm(email, encryptedEmail, username, password) {
 
   (async () => {
     const code = await sendVerificationCodeEmail(email);
-    console.log(code);
     function registerClick() {
       if (Number(verificationInput.value) === code) {
         register(encryptedEmail, username, password, codeError);

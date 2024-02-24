@@ -1,6 +1,6 @@
 import { updateTimestamp, centerElement } from "./home";
-import { key } from '../globals';
 import { appendRichMessage, appendMessage } from "./send";
+const { KEY } = process.env
 
 const chatDisplay = document.getElementById("chat-display");
 const messageContainer = document.getElementById("message-container");
@@ -59,7 +59,7 @@ function loadRooms() {
         const urlParams = new URLSearchParams(window.location.search);
         const encryptedUrlID = urlParams.get("chatID");
         if (encryptedUrlID) {
-          const urlID = CryptoJS.AES.decrypt(encryptedUrlID, key).toString(
+          const urlID = CryptoJS.AES.decrypt(encryptedUrlID, KEY).toString(
             CryptoJS.enc.Utf8
           );
           urlIDNumber = urlID ? parseInt(urlID, 10) : null;

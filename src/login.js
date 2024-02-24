@@ -1,4 +1,4 @@
-import { key } from "../globals";
+const { KEY } = process.env
 
 const loginForm = document.getElementById("login-form");
 const emailInput = document.getElementById("email");
@@ -30,11 +30,11 @@ loginForm.addEventListener("submit", async function (event) {
   if (emailError.textContent === "" && passwordError.textContent === "") {
     const encryptedEmail = CryptoJS.AES.encrypt(
       emailInput.value,
-      key
+      KEY
     ).toString();
     const encryptedPassword = CryptoJS.AES.encrypt(
       passwordInput.value,
-      key
+      KEY
     ).toString();
 
     try {

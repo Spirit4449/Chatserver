@@ -1,5 +1,7 @@
 // webpack.config.js
 const path = require("path");
+const Dotenv = require('dotenv-webpack');
+const webpack = require('webpack');
 
 module.exports = {
   entry: {
@@ -13,7 +15,14 @@ module.exports = {
     filename: "[name].bundle.js",
     path: path.resolve(__dirname, "dist", "Bundles"),
   },
-  plugins: [],
+  plugins: [
+    new Dotenv({
+      path: path.resolve(__dirname, '.env'), // Path to your .env file
+    }),
+    new webpack.DefinePlugin({
+      'process.nodenv': JSON.stringify(process.env), // Define environment variables
+    }),
+  ],
   mode: "development",
   devtool: "inline-source-map",
   module: {
