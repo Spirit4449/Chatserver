@@ -1,0 +1,39 @@
+{
+  "name": "chatservernew",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "server": "nodemon --watch server.js --watch webpack.config.js --watch globals.js server.js",
+    "webpack": "webpack serve --mode development"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@babel/core": "^7.23.9",
+    "@babel/preset-env": "^7.23.9",
+    "@sendgrid/mail": "^8.1.1",
+    "babel-loader": "^9.1.3",
+    "bcrypt": "^5.1.1",
+    "cookie-parser": "^1.4.6",
+    "crypto-js": "^4.2.0",
+    "dotenv": "^16.4.5",
+    "dotenv-webpack": "^8.0.1",
+    "express": "^4.18.2",
+    "express-mysql-session": "^3.0.0",
+    "express-rate-limit": "^7.1.4",
+    "express-session": "^1.17.3",
+    "mariadb": "^3.2.3",
+    "mysql2": "^3.9.1",
+    "nodemailer": "^6.9.9",
+    "socket.io": "^4.7.2",
+    "webpack": "^5.90.2",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-middleware": "^7.0.0",
+    "webpack-dev-server": "^5.0.2",
+    "webpack-hot-middleware": "^2.26.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.3"
+  }
+}
