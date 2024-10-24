@@ -86,6 +86,9 @@ function send() {
     });
 }
 
+
+socket.emit("new-user", '        A user')
+
 socket.on("chat-message", (data) => {
   if (data.chat == window.location.href.split("/").pop()) {
     appendRichMessage(data.name, data.message, data.icon, data.timestamp);
@@ -93,7 +96,7 @@ socket.on("chat-message", (data) => {
 });
 
 socket.on("user-connected", (name) => {
-  appendMessage(`${name} connected`);
+  appendMessage(`${name} just joined the chat!`);
 });
 
 socket.on("user-disconnected", (name) => {

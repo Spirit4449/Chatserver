@@ -168,19 +168,19 @@
   margin: 10px;
   color: white;
 }
-#close-groupdm {
+.close {
   margin: 0;
   position: absolute;
   top: 0;
   right: 0;
   color: #c4c4c4;
 }
-#close-groupdm:hover {
+.close:hover {
   color: white;
 }
 
 /* Rate Limit */
-#rate-limit {
+.center-popup {
   width: 30%;
   height: 30%;
   min-width: 400px;
@@ -191,23 +191,23 @@
   z-index: 4;
   animation: zoomIn 0.3s ease-in-out;
 }
-#rate-limit.zoomout {
+.center-popup.zoomout {
   animation: zoomOut 0.1s ease-in-out;
 }
 
-#rate-limit h2 {
+.center-popup h2 {
   text-align: center;
   font-size: 25px;
   margin: 10px;
   color: white;
 }
 
-#rate-limit p {
+.center-popup p {
   margin-top: 20px;
   font-size: 16px;
 }
 
-#rate-limit-bottom {
+.center-popup-bottom {
   border-bottom-left-radius: 15px;
   border-bottom-right-radius: 15px;
 }
@@ -249,4 +249,56 @@
     display: block;
     opacity: 1;
   }
+}
+
+
+.server-options {
+  flex-direction: column;
+}
+
+.server-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px 15px;
+  cursor: pointer;
+  width: 100px;
+}
+
+.server-option:hover {
+  background-color: #3a383a;
+}
+
+
+.invite-link {
+  display: flex;
+  background-color: #121112;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  border-radius: 5px;
+  padding: 2px 5px;
+  height: 40px;
+}
+
+#invite-link-text-div {
+  overflow: hidden;
+  padding-left: 3px;
+}
+#invite-link-text {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  margin: 0;
+}
+
+.small-button {
+  border-radius: 6px;
+  font-family: "Work Sans", sans-serif;
+  padding: 8px 0px;
+  width: 100px;
+  background-color: #3d87ff;
+  border: 2px solid #3a383a;
+  color: white;
+  cursor: pointer;
 }

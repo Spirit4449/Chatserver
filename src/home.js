@@ -2,12 +2,12 @@ import { redirect } from "./onload";
 
 const chatContainer = document.getElementById("chat-container");
 const membersContainer = document.getElementById("members");
-const messageInput = document.getElementById('message-input')
+const messageInput = document.getElementById("message-input");
 
 const rateLimit = document.getElementById("rate-limit");
 const rateLimitMessage = document.getElementById("rate-limit-message");
 
-const chatNameLabel = document.getElementById('chat-name-label')
+const chatNameLabel = document.getElementById("chat-name-label");
 
 const darkOverlay = document.getElementById("dark-overlay");
 
@@ -61,7 +61,7 @@ createGroupDMButton.addEventListener("click", function (event) {
   const createGroupDM = document.getElementById("group-dm");
   createGroupDM.style.display = "block";
   darkOverlay.style.display = "block";
-  const chatName = document.getElementById('chat-name')
+  const chatName = document.getElementById("chat-name");
   chatName.focus();
   closePopup(document.getElementById("create"));
   chatNameLabel.style.color = "#cdcdcd";
@@ -204,8 +204,96 @@ rateLimitButton.addEventListener("click", (event) => {
 });
 
 const serverDropdown = document.getElementById("server-options");
+const serverDropdownPopup = document.getElementById("server-options-popup");
 serverDropdown.addEventListener("click", function (event) {
   event.preventDefault();
+
+  if (
+    serverDropdownPopup.style.display === "none" ||
+    serverDropdownPopup.style.display === ""
+  ) {
+    const dropdownRect = serverDropdown.getBoundingClientRect();
+    const popupRect = serverDropdownPopup.getBoundingClientRect();
+
+    // Calculate the center x position of serverDropdown and serverDropdownPopup
+    const dropdownCenterX = dropdownRect.left - dropdownRect.width / 2;
+    const popupOffsetX = dropdownCenterX - popupRect.width / 2;
+
+    // Position the popup underneath with a slight Y offset (e.g., 10px)
+    const popupOffsetY = dropdownRect.bottom + 10;
+
+    // Apply the calculated position to the popup
+    serverDropdownPopup.style.position = "absolute";
+    serverDropdownPopup.style.left = `${popupOffsetX}px`;
+    serverDropdownPopup.style.top = `${popupOffsetY}px`;
+
+    // Show the popup
+    serverDropdownPopup.style.display = "flex";
+  } else {
+    serverDropdownPopup.style.display = "none";
+  }
+});
+
+const inviteButton = document.getElementById("invite-button");
+const inviteDiv = document.getElementById("invite");
+inviteButton.addEventListener("click", (event) => {
+  inviteDiv.style.display = "flex";
+  darkOverlay.style.display = "block";
+  serverDropdownPopup.style.display = "none";
+  const chatId = window.location.pathname.split("/").pop();
+  fetch(`/invite-user`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ id: chatId }),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      const inviteLinkText = document.getElementById("invite-link-text");
+      console.log(data.userResults);
+      inviteLinkText.textContent =
+        window.location.origin + "/invite/" + data.link;
+
+      const inviteButton = document.getElementById("copy-invite-link");
+      inviteButton.addEventListener("click", (event) => {
+        navigator.clipboard.writeText(inviteLinkText.textContent).then(() => {
+          inviteButton.style.backgroundColor = "#1a6334";
+          inviteButton.value = "Copied!";
+          setTimeout(() => {
+            inviteButton.style.backgroundColor = "#3d87ff";
+            inviteButton.value = "Copy";
+          }, 1500);
+        });
+      });
+      function closeInvitePopup() {
+        event.stopPropagation();
+        inviteDiv.classList.add("zoomout");
+        inviteDiv.addEventListener("animationend", (event) => {
+          if (event.animationName === "zoomOut") {
+            inviteDiv.classList.remove("zoomout");
+            inviteDiv.style.display = "none";
+            darkOverlay.style.display = "none";
+            messageInput.focus();
+          }
+        });
+      }
+
+      window.addEventListener("mousedown", function (event) {
+        if (!inviteDiv.contains(event.target) && inviteDiv.style.display === 'flex') {
+          closeInvitePopup();
+        }
+      });
+
+      document
+        .getElementById("close-invite")
+        .addEventListener("click", (event) => {
+          closeInvitePopup();
+        });
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+    });
 });
 
 const textarea = document.getElementById("message-input");
@@ -244,47 +332,46 @@ function createChatElement(chat, chatID) {
 
   const chatName = document.createElement("h6");
   chatName.textContent = chat;
-  chatName.style.overflow = 'hidden'
+  chatName.style.overflow = "hidden";
   chatDiv.appendChild(chatName);
 
   chatDiv.addEventListener("click", function () {
     redirect(chatID, chatDiv);
   });
-  let hoverTimeout
-  chatDiv.addEventListener('mouseenter', function() {
+  let hoverTimeout;
+  chatDiv.addEventListener("mouseenter", function () {
     function showHoverDiv() {
       const hoverDiv = document.createElement("div");
-      hoverDiv.textContent = chat; 
+      hoverDiv.textContent = chat;
       hoverDiv.style.position = "absolute";
-      hoverDiv.style.background = "#2E2E2E"; 
-      hoverDiv.style.color = "#D4D4D4"; 
-      hoverDiv.style.padding = "3px 8px"; 
-      hoverDiv.style.borderRadius = "10px"; 
-      hoverDiv.style.maxWidth = '200px';
-      hoverDiv.style.overflowWrap = 'anywhere'
-  
+      hoverDiv.style.background = "#2E2E2E";
+      hoverDiv.style.color = "#D4D4D4";
+      hoverDiv.style.padding = "3px 8px";
+      hoverDiv.style.borderRadius = "10px";
+      hoverDiv.style.maxWidth = "200px";
+      hoverDiv.style.overflowWrap = "anywhere";
+
       const rect = chatDiv.getBoundingClientRect();
       const centerX = rect.left + rect.width / 2;
       const top = rect.top;
-  
-  
+
       document.body.appendChild(hoverDiv);
-      hoverDiv.style.left = centerX - (hoverDiv.clientWidth/2) + 'px';
-      hoverDiv.style.top = top - hoverDiv.clientHeight - 5 + 'px';
+      hoverDiv.style.left = centerX - hoverDiv.clientWidth / 2 + "px";
+      hoverDiv.style.top = top - hoverDiv.clientHeight - 5 + "px";
       chatDiv.hoverDiv = hoverDiv;
     }
     if (chatName.scrollWidth > chatName.clientWidth) {
-      hoverTimeout = setTimeout(showHoverDiv, 1000)
+      hoverTimeout = setTimeout(showHoverDiv, 1000);
     }
-  })
-  chatDiv.addEventListener('mouseleave', function() {
-    clearTimeout(hoverTimeout)
+  });
+  chatDiv.addEventListener("mouseleave", function () {
+    clearTimeout(hoverTimeout);
     if (chatDiv.hoverDiv) {
       chatDiv.hoverDiv.remove();
       chatDiv.hoverDiv = null; // Remove the reference
     }
-  })
-  chatContainer.addEventListener('scroll', function() {
+  });
+  chatContainer.addEventListener("scroll", function () {
     if (chatDiv.hoverDiv) {
       chatDiv.hoverDiv.remove();
       chatDiv.hoverDiv = null;

@@ -1,0 +1,71 @@
+body {
+  font-family: "Work Sans", sans-serif;
+  color: #b5bac1;
+  /* background-image: linear-gradient(#7DB9D8, #1E9FE3, #5865f2); */
+  background-image: url("/assets/chatbackground.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  overflow: hidden;
+}
+
+p {
+    margin: 0;
+}
+
+.invite-container {
+  text-align: center;
+  padding: 20px;
+  border-radius: 8px;
+  background-color: #313338;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  width: 40%;
+  height: 30%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* Style the header */
+.p-header {
+  font-size: 15px;
+  margin-bottom: 7px;
+  color: rgb(182, 182, 182);
+}
+
+/* Description text */
+.name {
+  font-size: 30px;
+}
+
+#username {
+  margin-bottom: 20px;
+}
+
+/* Join button styling */
+.join-button {
+  padding: 10px 20px;
+  font-size: 16px;
+  color: white;
+  background-color: #3d87ff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 100%;
+  margin-bottom: 10px;
+  transition: background-color 0.3s;
+}
+
+.join-button:hover {
+  background-color: #1a6334;
+}
+
+.join-button:disabled {
+    background-color: #454545;
+    cursor: not-allowed;
+}

@@ -10,6 +10,7 @@ module.exports = {
     signup: "./src/signup.js",
     script: "./src/send.js",
     onload: "./src/onload.js",
+    invite: "./src/invite.js",
   },
   output: {
     filename: "[name].bundle.js",

@@ -242,6 +242,7 @@ async function getChat(endpoint) {
         document
           .getElementById("message-input")
           .setAttribute("placeholder", `Message ${data.chatData.ChatName}...`);
+        document.getElementById('invite-header').textContent = 'Invite friends to ' + data.chatData.ChatName
 
         const messagesData = data.messages.map((message) => {
           const username = message.Username || "Unknown";

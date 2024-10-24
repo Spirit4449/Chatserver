@@ -176,6 +176,10 @@ app.get("/home", (req, res) => {
   res.sendFile(path.join(__dirname, "dist", "Pages", "Home", "home.html"));
 });
 
+app.get('/invite/:id', (req, res) => {
+  res.sendFile(path.join(__dirname, "dist", "Pages", "Invite", "invite.html"));
+});
+
 app.get("/get-rooms", async (req, res) => {
   const userID = req.session.userid;
   const findRooms = "SELECT ChatID from userchats WHERE UserID = ?";
@@ -242,6 +246,25 @@ app.post("/chat", roomCreationLimiter, async (req, res) => {
     console.log(err);
     conn.release();
     return res.status(500).json({ error: "Error inserting chat" });
+  }
+});
+
+app.post('/adduser', async (req, res) => {
+  const chatid = req.body.chatid;
+  const userid = req.session.userid;
+  console.log(userid)
+
+  const insertUserChatQuery = `INSERT INTO userchats (UserID, ChatID) VALUES (?, ?)`;
+  const conn = await pool.getConnection();
+
+  try {
+    const [userExists] = await conn.query(insertUserChatQuery, [userid, chatid]);
+    res.status(200).json({ success: true, message: 'Joined chat' });
+  } catch (error) {
+    console.error('Error processing invite:', error);
+    res.status(500).json({ success: false, message: 'An error occurred.' });
+  } finally {
+    conn.release(); // Always release the connection
   }
 });
 
@@ -369,6 +392,68 @@ app.post("/check-email", async (req, res) => {
   } catch (checkErr) {
     console.error("Error checking email: " + checkErr.message);
     return res.status(500).json({ error: "Error checking email" });
+  }
+});
+
+app.post("/invite-user", async (req, res) => {
+  const chatID = req.body.id;
+
+  const conn = await pool.getConnection();
+  console.log('working')
+  // Query to fetch usernames, profile icons, and other relevant data
+  const insertLinkQuery = `
+      INSERT INTO links (chatid, url, deletion_time)
+      VALUES (?, ?, NULL)
+  `;
+
+  try {
+    // Execute the query
+    const url = generateRandomString(10)
+    const userResults = await conn.query(insertLinkQuery, [chatID, url]);
+
+    // Send the results as JSON response
+    res.status(200).json({ success: true, link: url });
+    conn.release();
+  } catch (error) {
+    console.error("Error retrieving invite link:", error);
+    res.status(500).json({ success: false, error: "Error retrieving invite link" });
+  }
+});
+
+app.post('/invite', async (req, res) => {
+  const inviteId = req.body.inviteId;
+  const userID = req.session.userid;
+
+  const conn = await pool.getConnection();
+
+  try {
+    // Step 1: Check if inviteId exists and get chatId
+    const inviteQuery = `SELECT chatid FROM links WHERE url = ? LIMIT 1`;
+    const [inviteResult] = await conn.query(inviteQuery, [inviteId]);
+
+    if (!inviteResult || inviteResult.length === 0) {
+      return res.status(404).json({ success: false, message: 'Invalid invite link.' });
+    }
+    console.log(inviteResult)
+
+    const chatid = inviteResult.chatid;
+
+    // Step 2: Check if the user is already in the chat
+    const userExistsQuery = `SELECT * FROM userchats WHERE UserID = ? AND ChatID = ?`;
+    const userExists = await conn.query(userExistsQuery, [userID, chatid]);
+    console.log(userExists)
+
+    if (!userExists || userExists.length > 0) {
+      return res.status(200).json({ success: true, message: 'User is already in the chat', chat: chatid });
+    }
+
+    // Step 3: Send success response
+    res.status(200).json({ success: true, message: 'Can join chat', chat: chatid });
+  } catch (error) {
+    console.error('Error processing invite:', error);
+    res.status(500).json({ success: false, message: 'An error occurred.' });
+  } finally {
+    conn.release(); // Always release the connection
   }
 });
 
