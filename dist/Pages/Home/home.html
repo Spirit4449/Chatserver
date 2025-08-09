@@ -211,9 +211,48 @@
         <div></div>
       </div>
     </div>
+
+    <div class="server-options popup" id="server-options-popup">
+      <div class="server-option">
+        <p>Info</p>
+        <img src="/assets/info.svg" alt="rename">
+      </div>
+      <div class="server-option">
+        <p>Settings</p>
+        <img src="/assets/settings.svg" alt="rename">
+      </div>
+      <div class="server-option" id="invite-button">
+        <p>Invite</p>
+        <img src="/assets/invite.svg" alt="invite">
+      </div>
+      <div class="server-option">
+        <p>Delete</p>
+        <img src="/assets/delete.svg" alt="delete">
+      </div>
+    </div>
+
+    <div class="invite popup center-popup" id="invite">
+      <div class="popup-context">
+        <span class="material-symbols-rounded close" id="close-invite">close</span>
+        <h2 id="invite-header">Invite friends to </h2>
+        <p class="popup-text">
+          Friends will show up here...
+        </p>
+      </div>
+      <div class="center-popup-bottom popup-bottom">
+        <p style="text-align: left; margin: 5px 0">Or send invite link</p>
+        <div class="invite-link">
+          <div id="invite-link-text-div">
+            <p id="invite-link-text"></p>
+          </div>
+          <input class="small-button" id="copy-invite-link" type="button" value="Copy">
+        </div>
+      </div>
+    </div>
+
     <div class="popup" id="group-dm">
       <div class="popup-context">
-        <span class="material-symbols-rounded" id="close-groupdm">close</span>
+        <span class="material-symbols-rounded close" id="close-groupdm">close</span>
         <h3>New Group DM</h3>
         <p class="popup-text">
           Connect with multiple friends and chat privately
@@ -240,14 +279,14 @@
       </div>
     </div>
 
-    <div class="popup" id="rate-limit">
+    <div class="popup center-popup" id="rate-limit">
       <div class="popup-context">
         <h2>Slow down...</h2>
         <p id="rate-limit-message" class="popup-text">
           You are creating too many servers. Try again in a few minutes
         </p>
       </div>
-      <div class="popup-bottom" id="rate-limit-bottom">
+      <div class="center-popup-bottom popup-bottom">
         <input
           class="button"
           style="padding: 15px 12px; font-size: 15px"
