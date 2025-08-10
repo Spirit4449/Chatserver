@@ -5,6 +5,7 @@
   "main": "server.js",
   "scripts": {
     "server": "nodemon --watch server.js --watch webpack.config.js --watch globals.js server.js",
+    "dev": "nodemon --watch server.js --watch webpack.config.js server.js",
     "webpack": "webpack serve --mode development"
   },
   "author": "",

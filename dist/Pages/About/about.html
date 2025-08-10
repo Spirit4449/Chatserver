@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>About - ClassChats</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        --accent-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        --dark-bg: #0a0a0f;
+        --card-bg: rgba(255, 255, 255, 0.05);
+        --glass-bg: rgba(255, 255, 255, 0.1);
+        --text-primary: #ffffff;
+        --text-secondary: #b8bcc8;
+        --text-muted: #6b7280;
+        --border-color: rgba(255, 255, 255, 0.1);
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+        background: var(--dark-bg);
+        color: var(--text-primary);
+        overflow-x: hidden;
+        line-height: 1.6;
+      }
+
+      /* Background Animation */
+      .background-animation {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        background: radial-gradient(
+            circle at 20% 20%,
+            rgba(102, 126, 234, 0.1) 0%,
+            transparent 50%
+          ),
+          radial-gradient(
+            circle at 80% 80%,
+            rgba(245, 87, 108, 0.1) 0%,
+            transparent 50%
+          ),
+          radial-gradient(
+            circle at 40% 60%,
+            rgba(79, 172, 254, 0.08) 0%,
+            transparent 50%
+          );
+      }
+
+      .floating-particles {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+      }
+
+      .particle {
+        position: absolute;
+        width: 2px;
+        height: 2px;
+        background: rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        animation: float 20s linear infinite;
+      }
+
+      @keyframes float {
+        0% {
+          transform: translateY(100vh) rotate(0deg);
+          opacity: 0;
+        }
+        10% {
+          opacity: 1;
+        }
+        90% {
+          opacity: 1;
+        }
+        100% {
+          transform: translateY(-100px) rotate(360deg);
+          opacity: 0;
+        }
+      }
+
+      /* Header */
+      .header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 1000;
+        padding: 1rem 2rem;
+        backdrop-filter: blur(20px);
+        background: rgba(10, 10, 15, 0.8);
+        border-bottom: 1px solid var(--border-color);
+        transition: all 0.3s ease;
+      }
+
+      .nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        max-width: 1400px;
+        margin: 0 auto;
+      }
+
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        font-size: 1.5rem;
+        font-weight: 800;
+        background: white;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        text-decoration: none;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 2rem;
+        list-style: none;
+      }
+
+      .nav-links a {
+        color: var(--text-secondary);
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        position: relative;
+      }
+
+      .nav-links a:hover,
+      .nav-links a.active {
+        color: var(--text-primary);
+      }
+
+      .nav-links a::after {
+        content: "";
+        position: absolute;
+        bottom: -4px;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: var(--primary-gradient);
+        transition: width 0.3s ease;
+      }
+
+      .nav-links a:hover::after,
+      .nav-links a.active::after {
+        width: 100%;
+      }
+
+      .cta-buttons {
+        display: flex;
+        gap: 1rem;
+      }
+
+      .btn {
+        padding: 0.75rem 1.5rem;
+        border-radius: 12px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+        border: none;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .btn-primary {
+        background: var(--primary-gradient);
+        color: white;
+        box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
+      }
+
+      .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 30px rgba(102, 126, 234, 0.4);
+      }
+
+      .btn-secondary {
+        background: var(--glass-bg);
+        color: var(--text-primary);
+        border: 1px solid var(--border-color);
+        backdrop-filter: blur(10px);
+      }
+
+      .btn-secondary:hover {
+        background: rgba(255, 255, 255, 0.15);
+        transform: translateY(-2px);
+      }
+
+      /* Main Content */
+      .main-content {
+        padding-top: 120px;
+        min-height: 100vh;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 2rem;
+      }
+
+      /* Hero Section */
+      .about-hero {
+        padding: 4rem 0 6rem;
+        text-align: center;
+      }
+
+      .about-hero h1 {
+        font-size: clamp(3rem, 6vw, 4.5rem);
+        font-weight: 900;
+        margin-bottom: 1.5rem;
+        background: linear-gradient(135deg, #ffffff 0%, #b8bcc8 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        letter-spacing: -0.02em;
+        line-height: 1.1;
+      }
+
+      .about-hero p {
+        font-size: 1.25rem;
+        color: var(--text-secondary);
+        max-width: 700px;
+        margin: 0 auto;
+        line-height: 1.7;
+      }
+
+      /* Story Section */
+      .story-section {
+        padding: 4rem 0;
+        position: relative;
+      }
+
+      .story-content {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 4rem;
+        align-items: center;
+        margin-bottom: 4rem;
+      }
+
+      .story-text h2 {
+        font-size: 2.5rem;
+        font-weight: 800;
+        margin-bottom: 2rem;
+        background: var(--primary-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .story-text p {
+        color: var(--text-secondary);
+        font-size: 1.1rem;
+        line-height: 1.7;
+        margin-bottom: 1.5rem;
+      }
+
+      .story-visual {
+        background: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 20px;
+        padding: 3rem;
+        backdrop-filter: blur(10px);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .story-visual::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: var(--primary-gradient);
+      }
+
+      .highlight-stat {
+        text-align: center;
+        margin-bottom: 2rem;
+      }
+
+      .highlight-stat h3 {
+        font-size: 3rem;
+        font-weight: 900;
+        background: var(--accent-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 0.5rem;
+      }
+
+      .highlight-stat p {
+        color: var(--text-secondary);
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        font-size: 0.9rem;
+      }
+
+      /* Mission Section */
+      .mission-section {
+        padding: 6rem 0;
+        background: var(--glass-bg);
+        border-top: 1px solid var(--border-color);
+        border-bottom: 1px solid var(--border-color);
+        backdrop-filter: blur(10px);
+      }
+
+      .mission-content {
+        text-align: center;
+        max-width: 900px;
+        margin: 0 auto;
+      }
+
+      .mission-content h2 {
+        font-size: 2.5rem;
+        font-weight: 800;
+        margin-bottom: 2rem;
+        background: var(--secondary-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .mission-content p {
+        font-size: 1.2rem;
+        color: var(--text-secondary);
+        line-height: 1.8;
+        margin-bottom: 2rem;
+      }
+
+      /* Values Section */
+      .values-section {
+        padding: 6rem 0;
+      }
+
+      .values-header {
+        text-align: center;
+        margin-bottom: 4rem;
+      }
+
+      .values-header h2 {
+        font-size: 2.5rem;
+        font-weight: 800;
+        margin-bottom: 1rem;
+        background: var(--primary-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .values-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+      }
+
+      .value-card {
+        background: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 20px;
+        padding: 2.5rem;
+        backdrop-filter: blur(10px);
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .value-card:hover {
+        transform: translateY(-10px);
+        border-color: rgba(102, 126, 234, 0.5);
+        box-shadow: 0 20px 40px rgba(102, 126, 234, 0.1);
+      }
+
+      .value-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1.5rem;
+        font-size: 24px;
+      }
+
+      .value-icon.primary {
+        background: var(--primary-gradient);
+      }
+
+      .value-icon.secondary {
+        background: var(--secondary-gradient);
+      }
+
+      .value-icon.accent {
+        background: var(--accent-gradient);
+      }
+
+      .value-card h3 {
+        font-size: 1.4rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        color: var(--text-primary);
+      }
+
+      .value-card p {
+        color: var(--text-secondary);
+        line-height: 1.6;
+      }
+
+      /* Team Section */
+      .team-section {
+        padding: 6rem 0;
+        background: var(--glass-bg);
+        border-top: 1px solid var(--border-color);
+        backdrop-filter: blur(10px);
+      }
+
+      .team-header {
+        text-align: center;
+        margin-bottom: 4rem;
+      }
+
+      .team-header h2 {
+        font-size: 2.5rem;
+        font-weight: 800;
+        margin-bottom: 1rem;
+        background: var(--accent-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .team-content {
+        max-width: 800px;
+        margin: 0 auto;
+        text-align: center;
+      }
+
+      .team-content p {
+        font-size: 1.1rem;
+        color: var(--text-secondary);
+        line-height: 1.7;
+        margin-bottom: 2rem;
+      }
+
+      .team-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 2rem;
+        margin-top: 3rem;
+      }
+
+      .team-stat {
+        text-align: center;
+      }
+
+      .team-stat h3 {
+        font-size: 2.5rem;
+        font-weight: 900;
+        background: var(--primary-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 0.5rem;
+      }
+
+      .team-stat p {
+        color: var(--text-secondary);
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        font-size: 0.8rem;
+      }
+
+      /* CTA Section */
+      .cta-section {
+        padding: 6rem 0;
+        text-align: center;
+      }
+
+      .cta-content {
+        max-width: 700px;
+        margin: 0 auto;
+      }
+
+      .cta-section h2 {
+        font-size: 2.5rem;
+        font-weight: 800;
+        margin-bottom: 1.5rem;
+        background: linear-gradient(135deg, #ffffff 0%, #b8bcc8 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .cta-section p {
+        font-size: 1.2rem;
+        color: var(--text-secondary);
+        margin-bottom: 2.5rem;
+        line-height: 1.6;
+      }
+
+      .btn-large {
+        padding: 1rem 2rem;
+        font-size: 1.1rem;
+      }
+
+      /* Footer */
+      .footer {
+        padding: 4rem 2rem 2rem;
+        border-top: 1px solid var(--border-color);
+        background: rgba(0, 0, 0, 0.2);
+      }
+
+      .footer-content {
+        max-width: 1400px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 3rem;
+        margin-bottom: 2rem;
+      }
+
+      .footer-section h4 {
+        font-size: 1.1rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        color: var(--text-primary);
+      }
+
+      .footer-section p,
+      .footer-section a {
+        color: var(--text-secondary);
+        text-decoration: none;
+        margin-bottom: 0.5rem;
+        display: block;
+        transition: color 0.3s ease;
+      }
+
+      .footer-section a:hover {
+        color: var(--text-primary);
+      }
+
+      .footer-bottom {
+        text-align: center;
+        padding-top: 2rem;
+        border-top: 1px solid var(--border-color);
+        color: var(--text-muted);
+      }
+
+      /* Mobile Responsiveness */
+      @media (max-width: 768px) {
+        .nav-links {
+          display: none;
+        }
+
+        .story-content {
+          grid-template-columns: 1fr;
+          gap: 2rem;
+        }
+
+        .values-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .team-stats {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      @media (max-width: 480px) {
+        .container {
+          padding: 0 1rem;
+        }
+
+        .about-hero {
+          padding: 2rem 0 4rem;
+        }
+
+        .story-section,
+        .mission-section,
+        .values-section,
+        .team-section,
+        .cta-section {
+          padding: 3rem 0;
+        }
+
+        .team-stats {
+          grid-template-columns: 1fr;
+          gap: 1.5rem;
+        }
+      }
+
+      /* Scroll animations */
+      .fade-in {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: all 0.6s ease;
+      }
+
+      .fade-in.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Background Animation -->
+    <div class="background-animation">
+      <div class="floating-particles"></div>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+      <nav class="nav">
+        <a href="/" class="logo">
+          <img src="/assets/icon.svg" height="30px" alt="Class Chats" />
+          ClassChats
+        </a>
+        <ul class="nav-links">
+          <li><a href="/#features">Features</a></li>
+          <li><a href="#" class="active">About</a></li>
+        </ul>
+        <div class="cta-buttons">
+          <a href="login.html" class="btn btn-secondary">Login</a>
+          <a href="signup.html" class="btn btn-primary">Sign up</a>
+        </div>
+      </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Hero Section -->
+      <section class="about-hero">
+        <div class="container">
+          <h1>Revolutionizing Education Through Connection</h1>
+          <p>
+            We believe that learning flourishes when students and educators can
+            connect, collaborate, and communicate seamlessly. ClassChats was
+            born from this simple yet powerful vision.
+          </p>
+        </div>
+      </section>
+
+      <!-- Story Section -->
+      <section class="story-section">
+        <div class="container">
+          <div class="story-content fade-in">
+            <div class="story-text">
+              <h2>Our Story</h2>
+              <p>
+                ClassChats began in 2022 when a group of educators and
+                technologists recognized a critical gap in educational
+                communication. Traditional platforms were either too complex for
+                everyday use or too simple to handle the nuanced needs of modern
+                classrooms.
+              </p>
+              <p>
+                We saw teachers struggling to reach every student, students
+                missing important announcements, and parents feeling
+                disconnected from their children's learning journey. The
+                pandemic highlighted these challenges even more, making
+                effective digital communication not just helpful, but essential.
+              </p>
+              <p>
+                From that insight, ClassChats was born – a platform designed
+                specifically for the unique dynamics of educational
+                environments, where clarity, engagement, and accessibility
+                aren't just features, they're fundamental necessities.
+              </p>
+            </div>
+            <div class="story-visual">
+              <div class="highlight-stat">
+                <h3>2022</h3>
+                <p>Founded</p>
+              </div>
+              <p>
+                Starting with a simple question: "What if classroom
+                communication could be as natural as having a conversation?"
+                We've grown from a small team with big dreams to a platform
+                trusted by thousands of educators worldwide.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Mission Section -->
+      <section class="mission-section">
+        <div class="container">
+          <div class="mission-content fade-in">
+            <h2>Our Mission</h2>
+            <p>
+              To empower educators and students with intuitive communication
+              tools that break down barriers, foster genuine connections, and
+              create inclusive learning environments where every voice is heard
+              and valued.
+            </p>
+            <p>
+              We're not just building software – we're crafting experiences that
+              strengthen the fundamental human connections that make education
+              meaningful. Every feature we develop, every design decision we
+              make, is guided by our commitment to making learning more
+              accessible, engaging, and effective for everyone involved.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Values Section -->
+      <section class="values-section">
+        <div class="container">
+          <div class="values-header fade-in">
+            <h2>What We Stand For</h2>
+          </div>
+          <div class="values-grid">
+            <div class="value-card fade-in">
+              <div class="value-icon primary">🎯</div>
+              <h3>Simplicity First</h3>
+              <p>
+                We believe powerful tools don't have to be complicated. Every
+                feature is designed with clarity and ease-of-use in mind,
+                ensuring that technology enhances rather than hinders the
+                learning process.
+              </p>
+            </div>
+            <div class="value-card fade-in">
+              <div class="value-icon secondary">🌍</div>
+              <h3>Inclusive by Design</h3>
+              <p>
+                Education should be accessible to everyone. We build with
+                diverse learning styles, abilities, and backgrounds in mind,
+                ensuring our platform works for all students and educators.
+              </p>
+            </div>
+            <div class="value-card fade-in">
+              <div class="value-icon accent">🔒</div>
+              <h3>Privacy & Security</h3>
+              <p>
+                We take the responsibility of protecting student and educator
+                data seriously. Privacy isn't an afterthought – it's built into
+                the foundation of everything we create.
+              </p>
+            </div>
+            <div class="value-card fade-in">
+              <div class="value-icon primary">🚀</div>
+              <h3>Continuous Innovation</h3>
+              <p>
+                The world of education is constantly evolving, and so are we. We
+                listen to our community and continuously improve our platform to
+                meet changing needs.
+              </p>
+            </div>
+            <div class="value-card fade-in">
+              <div class="value-icon secondary">🤝</div>
+              <h3>Community-Driven</h3>
+              <p>
+                Our best ideas come from the educators and students who use our
+                platform daily. We're not just building for our community –
+                we're building with them.
+              </p>
+            </div>
+            <div class="value-card fade-in">
+              <div class="value-icon accent">💡</div>
+              <h3>Evidence-Based</h3>
+              <p>
+                Every decision we make is informed by research, data, and
+                real-world feedback. We believe in building solutions that are
+                not just innovative, but genuinely effective.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Team Section -->
+      <section class="team-section">
+        <div class="container">
+          <div class="team-header fade-in">
+            <h2>Built by Educators, for Educators</h2>
+          </div>
+          <div class="team-content fade-in">
+            <p>
+              Our diverse team brings together expertise from education,
+              technology, design, and research. What unites us is a shared
+              passion for improving educational experiences and a deep respect
+              for the vital work that educators do every day.
+            </p>
+            <p>
+              From former teachers who understand classroom dynamics firsthand,
+              to engineers who've worked at leading tech companies, to
+              researchers studying the future of learning – we combine practical
+              experience with technical excellence to create solutions that
+              truly work.
+            </p>
+            <div class="team-stats">
+              <div class="team-stat">
+                <h3>25+</h3>
+                <p>Team Members</p>
+              </div>
+              <div class="team-stat">
+                <h3>60%</h3>
+                <p>Education Background</p>
+              </div>
+              <div class="team-stat">
+                <h3>12</h3>
+                <p>Countries Represented</p>
+              </div>
+              <div class="team-stat">
+                <h3>100%</h3>
+                <p>Committed to Education</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CTA Section -->
+      <section class="cta-section">
+        <div class="container">
+          <div class="cta-content fade-in">
+            <h2>Ready to Transform Your Classroom?</h2>
+            <p>
+              Join thousands of educators who are already using ClassChats to
+              create more connected, engaging learning environments.
+            </p>
+            <a href="signup.html" class="btn btn-primary btn-large"
+              >Start Your Journey</a
+            >
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container">
+        <div class="footer-content">
+          <div class="footer-section">
+            <h4>ClassChats</h4>
+            <p>
+              Connecting classrooms, empowering education, and building the
+              future of learning together.
+            </p>
+          </div>
+          <div class="footer-section">
+           
+        </div>
+        <div class="footer-bottom">
+          <p>&copy; 2024 ClassChats. All rights reserved.</p>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      // Create floating particles
+      function createParticle() {
+        const particle = document.createElement("div");
+        particle.className = "particle";
+        particle.style.left = Math.random() * 100 + "%";
+        particle.style.animationDelay = Math.random() * 20 + "s";
+        particle.style.animationDuration = Math.random() * 10 + 15 + "s";
+        document.querySelector(".floating-particles").appendChild(particle);
+
+        // Remove particle after animation
+        setTimeout(() => {
+          particle.remove();
+        }, 25000);
+      }
+
+      // Create particles periodically
+      setInterval(createParticle, 300);
+
+      // Scroll animations
+      function revealOnScroll() {
+        const elements = document.querySelectorAll(".fade-in");
+        elements.forEach((element) => {
+          const elementTop = element.getBoundingClientRect().top;
+          const elementVisible = 150;
+
+          if (elementTop < window.innerHeight - elementVisible) {
+            element.classList.add("visible");
+          }
+        });
+      }
+
+      window.addEventListener("scroll", revealOnScroll);
+
+      // Initial check for elements in view
+      revealOnScroll();
+
+      // Header scroll effect
+      let lastScrollTop = 0;
+      const header = document.querySelector(".header");
+
+      window.addEventListener("scroll", () => {
+        const scrollTop =
+          window.pageYOffset || document.documentElement.scrollTop;
+
+        if (scrollTop > 100) {
+          header.style.background = "rgba(10, 10, 15, 0.95)";
+          header.style.backdropFilter = "blur(25px)";
+        } else {
+          header.style.background = "rgba(10, 10, 15, 0.8)";
+          header.style.backdropFilter = "blur(20px)";
+        }
+
+        lastScrollTop = scrollTop;
+      });
+    </script>
+  </body>
+</html>

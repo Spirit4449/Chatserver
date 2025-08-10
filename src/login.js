@@ -1,4 +1,4 @@
-const { KEY } = process.env
+const { KEY } = process.env;
 
 const loginForm = document.getElementById("login-form");
 const emailInput = document.getElementById("email");
@@ -8,7 +8,6 @@ const passwordError = document.getElementById("password-error");
 const container = document.querySelector(".container"); // Note the correct selector for the container element
 const passwordToggle = document.getElementById("password-toggle");
 
-const referrer = document.referrer;
 
 loginForm.addEventListener("submit", async function (event) {
   event.preventDefault();
@@ -54,16 +53,8 @@ loginForm.addEventListener("submit", async function (event) {
         if (data.accessCode) {
           createCookie("mcCode", data.accessCode, 90);
         }
-        console.log(referrer);
-        if (
-          referrer.includes("/login") ||
-          referrer.includes("/signup") ||
-          referrer === ""
-        ) {
-          window.location.href = "/home";
-        } else {
-          window.location.href = referrer;
-        }
+
+        window.location.href = "/home";
       } else if (response.status === 404) {
         emailError.textContent = "- Invalid email or password";
         passwordError.textContent = "- Invalid email or password";

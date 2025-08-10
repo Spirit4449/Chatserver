@@ -36,7 +36,8 @@ sgMail.setApiKey(
 
 app.use(
   webpackDevMiddleware(compiler, {
-    publicPath: "/Bundles",
+    publicPath: config.output.publicPath,
+    stats: "minimal"
   })
 );
 
@@ -174,6 +175,10 @@ app.get("/login", (req, res) => {
 });
 app.get("/home", (req, res) => {
   res.sendFile(path.join(__dirname, "dist", "Pages", "Home", "home.html"));
+});
+
+app.get("/about", (req, res) => {
+  res.sendFile(path.join(__dirname, "dist", "Pages", "About", "about.html"));
 });
 
 app.get('/invite/:id', (req, res) => {
