@@ -19,11 +19,11 @@ const CryptoJS = require("crypto-js");
 const rateLimit = require("express-rate-limit");
 
 // Webpack
-const webpack = require("webpack");
-const webpackDevMiddleware = require("webpack-dev-middleware");
-const webpackHotMiddleware = require("webpack-hot-middleware");
-const config = require("./webpack.config.js");
-const compiler = webpack(config);
+// const webpack = require("webpack");
+// const webpackDevMiddleware = require("webpack-dev-middleware");
+// const webpackHotMiddleware = require("webpack-hot-middleware");
+// const config = require("./webpack.config.js");
+// const compiler = webpack(config);
 
 // Mail
 require('dotenv').config();
@@ -34,14 +34,14 @@ sgMail.setApiKey(
   process.env.SEND_GRID
 );
 
-app.use(
-  webpackDevMiddleware(compiler, {
-    publicPath: config.output.publicPath,
-    stats: "minimal"
-  })
-);
+// app.use(
+//   webpackDevMiddleware(compiler, {
+//     publicPath: config.output.publicPath,
+//     stats: "minimal"
+//   })
+// );
 
-app.use(webpackHotMiddleware(compiler));
+// app.use(webpackHotMiddleware(compiler));
 
 app.set('trust proxy', 1);
 
