@@ -52,7 +52,6 @@ const mcConsoleAccess = ["100000"]; //Nischay, ..
 
 // Pool
 const pool = mariadb.createPool({
-  socketPath: "/run/mysqld/mysqld.sock",
   host: "localhost",
   user: process.env.DATABASE_USER,
   password: process.env.DATABASE_PASS,
