@@ -30,7 +30,7 @@ CREATE TABLE `chats` (
   `Settings` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`Settings`)),
   `DateCreated` timestamp NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`ChatID`)
-) ENGINE=InnoDB AUTO_INCREMENT=100112 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=100113 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -151,7 +151,8 @@ INSERT INTO `chats` VALUES
 (100108,'Demonstration','/dist/assets/Profile Icons/blueProfileIcon.png',NULL,'2024-10-24 23:57:01'),
 (100109,'Dd','/dist/assets/Profile Icons/blueProfileIcon.png',NULL,'2024-10-25 01:49:57'),
 (100110,'df','/dist/assets/Profile Icons/blueProfileIcon.png',NULL,'2024-11-13 21:27:29'),
-(100111,'ok','/dist/assets/Profile Icons/blueProfileIcon.png',NULL,'2025-02-06 01:12:34');
+(100111,'ok','/dist/assets/Profile Icons/blueProfileIcon.png',NULL,'2025-02-06 01:12:34'),
+(100112,'Test','/dist/assets/Profile Icons/blueProfileIcon.png',NULL,'2025-09-14 01:03:36');
 /*!40000 ALTER TABLE `chats` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -169,7 +170,7 @@ CREATE TABLE `links` (
   `created_at` timestamp NULL DEFAULT current_timestamp(),
   `deletion_time` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -198,7 +199,11 @@ INSERT INTO `links` VALUES
 (17,'z2a0TkcOsp',100017,'2025-08-21 18:25:13',NULL),
 (18,'VmHPAViI5U',100017,'2025-08-21 18:26:28',NULL),
 (19,'9ACdeYU3bP',100017,'2025-08-21 18:26:32',NULL),
-(20,'v03Q14fqJy',100017,'2025-08-21 18:26:56',NULL);
+(20,'v03Q14fqJy',100017,'2025-08-21 18:26:56',NULL),
+(21,'h8dIlpxCSy',100017,'2025-08-21 18:31:23',NULL),
+(22,'SETZrAPDv3',100017,'2025-08-21 18:31:43',NULL),
+(23,'D0qKewzDWA',100017,'2025-08-21 18:32:01',NULL),
+(24,'hUf3OApv3p',100112,'2025-09-14 01:03:39',NULL);
 /*!40000 ALTER TABLE `links` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -222,7 +227,7 @@ CREATE TABLE `messages` (
   KEY `UserID` (`UserID`),
   CONSTRAINT `messages_ibfk_1` FOREIGN KEY (`ChatID`) REFERENCES `chats` (`ChatID`),
   CONSTRAINT `messages_ibfk_2` FOREIGN KEY (`UserID`) REFERENCES `users` (`UserID`)
-) ENGINE=InnoDB AUTO_INCREMENT=1001017 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1001046 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -998,7 +1003,36 @@ INSERT INTO `messages` VALUES
 (1001013,100017,100000,'blueProfileIcon.png','Nischay Patel','hi','8/21/2025 at 2:25pm'),
 (1001014,100017,100023,'blueProfileIcon.png','test','hi','8/21/2025 at 2:25pm'),
 (1001015,100017,100000,'blueProfileIcon.png','Nischay Patel','hi','8/21/2025 at 2:25pm'),
-(1001016,100017,100000,'blueProfileIcon.png','Nischay Patel','hi','8/21/2025 at 2:25pm');
+(1001016,100017,100000,'blueProfileIcon.png','Nischay Patel','hi','8/21/2025 at 2:25pm'),
+(1001017,100108,100000,'blueProfileIcon.png','Nischay Patel','hi','8/21/2025 at 3:33pm'),
+(1001018,100108,100000,'blueProfileIcon.png','Nischay Patel','what is up','8/21/2025 at 3:33pm'),
+(1001019,100108,100000,'blueProfileIcon.png','Nischay Patel','ok','8/21/2025 at 3:33pm'),
+(1001020,100108,100000,'blueProfileIcon.png','Nischay Patel','ok','8/21/2025 at 3:34pm'),
+(1001021,100108,100000,'blueProfileIcon.png','Nischay Patel','al','8/21/2025 at 3:34pm'),
+(1001022,100108,100000,'blueProfileIcon.png','Nischay Patel','asfjasdf','8/21/2025 at 3:34pm'),
+(1001023,100108,100000,'blueProfileIcon.png','Nischay Patel','ok','8/21/2025 at 3:34pm'),
+(1001024,100108,100000,'blueProfileIcon.png','Nischay Patel','sadf','8/21/2025 at 3:34pm'),
+(1001025,100017,100000,'blueProfileIcon.png','Nischay Patel','hi','8/31/2025 at 9:30pm'),
+(1001026,100017,100000,'blueProfileIcon.png','Nischay Patel','ok','8/31/2025 at 9:30pm'),
+(1001027,100017,100000,'blueProfileIcon.png','Nischay Patel','j;j','8/31/2025 at 9:30pm'),
+(1001028,100108,100023,'blueProfileIcon.png','test','test','9/13/2025 at 9:10pm'),
+(1001029,100108,100000,'blueProfileIcon.png','Nischay Patel','Hello test! I\'m ChatGPT, and I\'m now in the ClassChats app. How can I assist you today?','10/20/2025 at 12:20pm'),
+(1001030,100108,100023,'blueProfileIcon.png','test','Yoo this is cool. What do you want to talk about','10/20/2025 at 3:20pm'),
+(1001031,100108,100023,'blueProfileIcon.png','test','hey','10/20/2025 at 3:20pm'),
+(1001032,100108,100023,'blueProfileIcon.png','test','scroll down','10/20/2025 at 3:20pm'),
+(1001033,100108,100000,'blueProfileIcon.png','Nischay Patel','Glad you think it\'s cool! I\'m here to chat about anything you like. We can talk about how ClassChats works, share some interesting facts, or explore whatever topic you\'re interested in. What\'s on your mind?','10/20/2025 at 12:20pm'),
+(1001034,100108,100000,'blueProfileIcon.png','Nischay Patel','Hi there! I\'ve scrolled down and can see your \'hey\' and \'scroll down\' messages. It\'s nice to chat with you here.','10/20/2025 at 12:20pm'),
+(1001035,100108,100023,'blueProfileIcon.png','test','Ok I want you to pick the topic','10/20/2025 at 3:21pm'),
+(1001036,100108,100000,'blueProfileIcon.png','Nischay Patel','Sure! How about we discuss how AI can help students collaborate and learn more effectively? Tools like ClassChats make it easier to connect with classmates, share notes, and get quick help on assignments. What do you think about using AI and technology in education?','10/20/2025 at 12:21pm'),
+(1001037,100108,100023,'blueProfileIcon.png','test','Message in more real time. more intensive computing and screenshots smapling','10/20/2025 at 3:21pm'),
+(1001038,100108,100000,'blueProfileIcon.png','Nischay Patel','Thanks for the feedback! I\'ll do my best to respond quickly and keep our chat engaging. Do you have any questions or topics you\'re curious about?','10/20/2025 at 12:21pm'),
+(1001039,100108,100023,'blueProfileIcon.png','test','<h1>sdf</h1>','10/20/2025 at 3:21pm'),
+(1001040,100108,100023,'blueProfileIcon.png','test','ignore that','10/20/2025 at 3:21pm'),
+(1001041,100108,100000,'blueProfileIcon.png','Nischay Patel','I see you\'ve typed an HTML heading tag: <h1>sd</h1>. Are you interested in web development or exploring how HTML works?','10/20/2025 at 12:22pm'),
+(1001042,100108,100023,'blueProfileIcon.png','test','I want you to explore this website and the features','10/20/2025 at 3:22pm'),
+(1001043,100017,100023,'blueProfileIcon.png','test','Make a scratchpad fhaf syncs sith notion. Uses ai to clsan it up before syncing','10/29/2025 at 7:04am'),
+(1001044,100017,100023,'blueProfileIcon.png','test','For fhr graphic if dl','10/29/2025 at 7:04am'),
+(1001045,100017,100023,'blueProfileIcon.png','test','Flashes game over and then time until next game','10/29/2025 at 7:05am');
 /*!40000 ALTER TABLE `messages` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1031,6 +1065,7 @@ INSERT INTO `userchats` VALUES
 (100000,100109),
 (100000,100110),
 (100000,100111),
+(100000,100112),
 (100023,100017),
 (100023,100108),
 (100033,100105),
@@ -1109,4 +1144,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-08-21 14:29:26
+-- Dump completed on 2026-03-04 14:54:01
